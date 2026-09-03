@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+.cursor/mcp.json
+
+# Dependencies and build
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+*.log
