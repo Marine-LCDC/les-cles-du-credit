@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  /* Marque */
+  --brand-main: #2e7d6b;
+  --brand-light: #e1f0ec;
+  --accent-sable: #c7a97a;
+  --bg-client: #f5efe3;
+  --neutral-dark: #33322e;
+  --neutral-muted: #5c5a54;
+  --white: #ffffff;
+
+  /* Statuts (jamais confondre avec la marque) */
+  --status-green: #3b9945;
+  --status-orange: #d9822b;
+  --status-red: #d64545;
+
+  /* Surfaces */
+  --background: var(--bg-client);
+  --foreground: var(--neutral-dark);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-main);
+  --color-brand-light: var(--brand-light);
+  --color-sable: var(--accent-sable);
+  --color-sable-light: var(--bg-client);
+  --color-neutral: var(--neutral-dark);
+  --color-neutral-muted: var(--neutral-muted);
+  --color-status-green: var(--status-green);
+  --color-status-orange: var(--status-orange);
+  --color-status-red: var(--status-red);
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-heading: var(--font-display), system-ui, sans-serif;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
