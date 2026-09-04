@@ -14,13 +14,18 @@ Les statuts doivent obligatoirement utiliser cette palette dédiée :
 - 🟠 Orange statut : `#D9822B`
 - 🔴 Rouge statut : `#D64545`
 
-## 2. Typographie & Composants
+## 2. Logo
+- Fichier : `assets/brand/logo.png` (rendu 3D — trou de serrure sable, personnage blanc, clé teal).
+- Usages forts : landing, splash, connexion agent, réseaux sociaux.
+- À petite taille (header, favicon) : prévoir à terme une version aplatie (silhouette).
+
+## 3. Typographie & Composants
 - Titres : Font sans-serif arrondie (ex. Poppins / Quicksand).
 - Corps de texte : System sans-serif neutre (ex. Inter). Taille min. 16px sur mobile.
 - Formes : Coins arrondis généreux (`border-radius: 12px` à `16px`) sur l'espace client.
 - Boutons & Zones cliquables : Hauteur minimale de 44px (Mobile-first).
 - Pas de MAJUSCULES pour les titres ou boutons.
 
-## 3. Interfaces Client vs Agent
+## 4. Interfaces Client vs Agent
 - Client : Fond sable clair `#F5EFE3`, composants aérés, barre de progression explicite ("Étape X sur 5").
 - Agent : Fond blanc/gris neutre, densité d'information plus forte, badge de statut (🟢/🟠/🔴) en premier élément visuel.

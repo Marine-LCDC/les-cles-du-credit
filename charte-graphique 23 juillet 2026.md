@@ -68,7 +68,8 @@ Le teal de marque n'apparaît **jamais** comme couleur de statut, uniquement dan
 
 ## 5. Logo — usage recommandé
 
-**Fichier source** : https://d1yei2z3i6k35z.cloudfront.net/1029184/68e663c6153e4_logolescl%C3%A9sducr%C3%A9dit4.png
+**Fichier source (projet)** : `assets/brand/logo.png`  
+**Archive / CDN** : https://d1yei2z3i6k35z.cloudfront.net/1029184/68e663c6153e4_logolescl%C3%A9sducr%C3%A9dit4.png
 
 - Le logo actuel (rendu 3D réaliste) fonctionne bien en usage isolé (favicon, écran de démarrage, page de connexion agent), mais sa texture 3D détaillée risque de mal vieillir à petite taille (barre de navigation, favicon 16x16) et de jurer avec une interface plate/épurée comme celle recommandée ici.
 - Suggestion : garder ce visuel comme image de marque forte (landing page, réseaux sociaux), mais prévoir à terme une version simplifiée en aplat (silhouette du trou de serrure + clé, sans le rendu 3D) pour les usages interface (header d'app, favicon) — plus cohérent avec le style flat recommandé pour l'ensemble du produit.
