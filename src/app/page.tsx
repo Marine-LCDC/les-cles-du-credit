@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export default function Home() {
   return (
@@ -45,20 +46,21 @@ export default function Home() {
 
         <div className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
           <Link
-            href="/simulateur"
+            href="/faisabilite"
             className="inline-flex min-h-11 items-center justify-center rounded-[12px] bg-brand px-6 text-base font-medium text-white transition-colors hover:bg-[#266b5c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
-            Essayer le simulateur
+            Estimer mon projet
           </Link>
-          <span className="inline-flex min-h-11 items-center justify-center rounded-[12px] border border-sable/60 bg-white/60 px-6 text-base font-medium text-neutral-muted backdrop-blur-sm">
-            Espace agent — bientôt
-          </span>
+          <Link
+            href="/simulateur"
+            className="inline-flex min-h-11 items-center justify-center rounded-[12px] border border-sable/60 bg-white/60 px-6 text-base font-medium text-neutral backdrop-blur-sm transition-colors hover:bg-white"
+          >
+            Simulateur de crédit
+          </Link>
         </div>
       </main>
 
-      <footer className="relative z-10 pb-8 text-center text-sm text-neutral-muted">
-        Estimation indicative — ne constitue pas un conseil en crédit
-      </footer>
+      <SiteFooter className="relative z-10" />
     </div>
   );
 }

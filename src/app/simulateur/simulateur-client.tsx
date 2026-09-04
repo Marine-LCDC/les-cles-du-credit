@@ -4,6 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
+  BANDEAU_RESULTAT,
+  DISCLAIMER_SIMULATEUR_CHECKBOX,
+} from "@/lib/legal-copy";
+import { OptInMarketing } from "@/components/OptInMarketing";
+import { SiteFooter } from "@/components/SiteFooter";
+import {
   type CreditResult,
   type VariableCalculee,
   calculerVariable,
@@ -66,6 +72,7 @@ export default function SimulateurClient() {
   const [submitted, setSubmitted] = useState(false);
   const [emailOptIn, setEmailOptIn] = useState(false);
   const [email, setEmail] = useState("");
+  const [disclaimerOk, setDisclaimerOk] = useState(false);
 
   const fieldsNeeded: FieldKey[] = useMemo(() => {
     const base: FieldKey[] = ["tauxAssuranceAnnuel"];
@@ -136,6 +143,7 @@ export default function SimulateurClient() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!disclaimerOk) return;
     setSubmitted(true);
   }
 
@@ -168,7 +176,7 @@ export default function SimulateurClient() {
 
         <div className="mb-6 rounded-[12px] border border-[#e6dcc8] bg-white/80 px-4 py-3 backdrop-blur-sm">
           <p className="text-sm text-neutral-muted leading-relaxed">
-            Simulation indicative — ne vaut pas accord de prêt
+            {BANDEAU_RESULTAT}
           </p>
         </div>
 
@@ -284,9 +292,20 @@ export default function SimulateurClient() {
             </p>
           )}
 
+          <label className="flex items-start gap-3 rounded-[12px] border border-[#e6dcc8] bg-white px-3.5 py-3 text-sm text-neutral">
+            <input
+              type="checkbox"
+              checked={disclaimerOk}
+              onChange={(e) => setDisclaimerOk(e.target.checked)}
+              className="mt-0.5 h-5 w-5 shrink-0 rounded border-[#e6dcc8] accent-brand"
+            />
+            <span>{DISCLAIMER_SIMULATEUR_CHECKBOX}</span>
+          </label>
+
           <button
             type="submit"
-            className="inline-flex w-full min-h-11 items-center justify-center rounded-[14px] bg-brand px-6 text-base font-medium text-white transition-colors hover:bg-[#266b5c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            disabled={!disclaimerOk}
+            className="inline-flex w-full min-h-11 items-center justify-center rounded-[14px] bg-brand px-6 text-base font-medium text-white transition-colors hover:bg-[#266b5c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50"
           >
             Voir mon résultat
           </button>
@@ -354,17 +373,12 @@ export default function SimulateurClient() {
                 Pour vos prochains projets, gardez votre simulateur personnel —
                 c&apos;est gratuit.
               </p>
-              <label className="mt-3 flex items-start gap-2 text-xs text-neutral-muted">
-                <input
-                  type="checkbox"
-                  className="mt-0.5"
+              <div className="mt-3">
+                <OptInMarketing
                   checked={emailOptIn}
-                  onChange={(e) => setEmailOptIn(e.target.checked)}
+                  onChange={setEmailOptIn}
                 />
-                <span>
-                  Je souhaite recevoir mon simulateur de crédit personnel offert
-                </span>
-              </label>
+              </div>
               {emailOptIn && (
                 <input
                   type="email"
@@ -391,11 +405,7 @@ export default function SimulateurClient() {
           </section>
         )}
 
-        <p className="mt-10 text-center text-sm text-neutral-muted">
-          <Link href="/" className="text-brand underline-offset-2 hover:underline">
-            Retour à l&apos;accueil
-          </Link>
-        </p>
+        <SiteFooter className="mt-10" />
       </div>
     </div>
   );

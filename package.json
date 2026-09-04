@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:credit": "npx --yes tsx --test src/lib/credit-math.test.ts"
+    "test:credit": "npx --yes tsx --test src/lib/credit-math.test.ts",
+    "test:moteur": "npx --yes tsx --test src/lib/moteur/moteur.test.ts src/lib/moteur/profils-types.test.ts",
+    "test": "npx --yes tsx --test src/lib/credit-math.test.ts src/lib/moteur/moteur.test.ts src/lib/moteur/profils-types.test.ts"
   },
   "dependencies": {
     "next": "16.3.4",
