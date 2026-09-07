@@ -117,22 +117,22 @@
 
 ---
 
-## Phase 2 — Validation terrain
+## Phase 2 — Validation terrain ✅
 
-**Total : ~8 h · Comptes requis : Vercel uniquement**
+**Statut : clôturée · Décision 7 sept. 2026 : GO Phase 3**
 
-| Tâche | Cursor (h) | Vous (h) | Total (h) |
-|-------|-----------:|---------:|----------:|
-| 2.1 Recruter 3-5 testeurs + envoyer URL | 0 | 1 | 1 |
-| 2.2 Collecter retours (formulaire ou WhatsApp) | 0 | 4 | 4 |
-| 2.3 Corrections prioritaires dans Cursor | 2 | 1 | 3 |
-| 2.4 Décision go/no-go Phase 3 | 0 | 0,5 | 0,5 |
+Retour terrain positif (« ça marche bien, vraiment bien comme application »). Pas de blocage produit identifié pour enchaîner sur le MVP agent B2B.
 
-*Les 4 h de tests terrain peuvent s'étaler sur 3-5 jours calendaires (30-45 min/testeur).*
+| Tâche | Cursor (h) | Vous (h) | Total (h) | Statut |
+|-------|-----------:|---------:|----------:|--------|
+| 2.1 Recruter 3-5 testeurs + envoyer URL | 0 | 1 | 1 | ✅ |
+| 2.2 Collecter retours (formulaire ou WhatsApp) | 0 | 4 | 4 | ✅ |
+| 2.3 Corrections prioritaires dans Cursor | 2 | 1 | 3 | ✅ |
+| 2.4 Décision go/no-go Phase 3 | 0 | 0,5 | 0,5 | ✅ **GO** |
 
 ---
 
-## Phase 3 — MVP agent B2B
+## Phase 3 — MVP agent B2B ← en cours
 
 **Total : ~47 h · Comptes : Supabase → Stripe → Brevo → domaine**
 
@@ -168,9 +168,8 @@ Architecture : [`plan-action-15-jours-lancement.md`](plan-action-15-jours-lancem
 
 ## Prochaine action concrète
 
-| Quand | Tâche | Durée |
-|-------|-------|------:|
-| **Aujourd'hui** | Phase 0 complète (arbitrages + domaine + Vercel) | 3 h |
-| **Demain** | Phase 1.1 Setup Next.js + 1er déploiement | 3,5 h |
-| **J+2** | Phase 1.2 Simulateur inversé | 4 h |
-| **J+3 à J+4** | Phase 1.3 Moteur financier | 12 h |
+| Quand | Tâche | Durée | Compte |
+|-------|-------|------:|--------|
+| **Maintenant** | **3.1** Créer Supabase + schema + RLS + auth magic link | 6,5 h | Supabase |
+| Ensuite | 3.2 Fiche bien agent + lien réutilisable | 5 h | — |
+| Puis | 3.3 → 3.9 (dashboard, Stripe, Brevo, page vente, QA) | ~35 h | Stripe, Brevo, domaine |

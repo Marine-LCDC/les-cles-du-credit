@@ -109,3 +109,4 @@ Référence prix : [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023
 | Date | Décision | Où c’est visible aujourd’hui |
 |------|----------|------------------------------|
 | 7 sept. 2026 | Retrait CTA simulateur + opt-in sur `/faisabilite` ; teaser guide des chiffres selon verdict ; capture email + lead magnet plus tard | `src/app/faisabilite/components/EcranResultat.tsx` |
+| 7 sept. 2026 | Phase 2 terrain clôturée — **GO Phase 3** (retours positifs sur l’app) | [`roadmap-projet.md`](roadmap-projet.md) |
