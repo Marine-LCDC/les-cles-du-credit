@@ -2,21 +2,18 @@
 
 import { MoneyField, SelectField, Toggle, InfoBanner } from "../components/fields";
 import {
+  MATURITE_OPTIONS,
   PROFIL_OPTIONS,
-  profilBesoinTrajectoire,
+  profilBesoinMaturite,
   type RevenuProForm,
   type WizardState,
 } from "../wizard-state";
-import type { ProfilProfessionnel } from "@/lib/moteur";
+import type { MaturiteActivite, ProfilProfessionnel } from "@/lib/moteur";
 
 type Props = {
   state: WizardState;
   patch: (p: Partial<WizardState>) => void;
 };
-
-function estDirigeant(profil: ProfilProfessionnel): boolean {
-  return profil === "dirigeant_gerant_artisan";
-}
 
 function BlocRevenu({
   titre,
@@ -27,9 +24,14 @@ function BlocRevenu({
   value: RevenuProForm;
   onChange: (v: RevenuProForm) => void;
 }) {
-  const dirigeant = estDirigeant(value.profil);
-  const peutTrajectoire = profilBesoinTrajectoire(value.profil);
-  const showTraj = dirigeant || value.utiliserTrajectoire;
+  const besoinMaturite = profilBesoinMaturite(value.profil);
+  const maturiteOkTroisAns = value.maturiteActivite === "trois_ans_ou_plus";
+  const showTraj =
+    besoinMaturite && value.utiliserTrajectoire && maturiteOkTroisAns;
+  const historiqueCourt =
+    besoinMaturite &&
+    (value.maturiteActivite === "moins_1_an" ||
+      value.maturiteActivite === "un_a_deux_ans");
 
   return (
     <div className="mb-6 rounded-[16px] border border-[#e6dcc8] bg-white/70 p-4">
@@ -42,9 +44,12 @@ function BlocRevenu({
           onChange({
             ...value,
             profil,
-            utiliserTrajectoire: estDirigeant(profil)
-              ? true
-              : value.utiliserTrajectoire,
+            maturiteActivite: profilBesoinMaturite(profil)
+              ? value.maturiteActivite
+              : "",
+            utiliserTrajectoire: profilBesoinMaturite(profil)
+              ? value.utiliserTrajectoire
+              : false,
           })
         }
         options={PROFIL_OPTIONS}
@@ -58,22 +63,46 @@ function BlocRevenu({
         </InfoBanner>
       ) : null}
 
-      {peutTrajectoire && !dirigeant ? (
-        <Toggle
-          label="Renseigner les 3 derniers exercices"
-          checked={value.utiliserTrajectoire}
-          onChange={(utiliserTrajectoire) =>
-            onChange({ ...value, utiliserTrajectoire })
-          }
-          hint="Sinon, indiquez un montant mensuel de référence"
-        />
-      ) : null}
+      {besoinMaturite ? (
+        <>
+          <SelectField<MaturiteActivite | "">
+            label="Depuis combien de temps cette activité ?"
+            value={value.maturiteActivite}
+            onChange={(maturiteActivite) =>
+              onChange({
+                ...value,
+                maturiteActivite,
+                utiliserTrajectoire:
+                  maturiteActivite === "trois_ans_ou_plus"
+                    ? value.utiliserTrajectoire
+                    : false,
+              })
+            }
+            options={[
+              { value: "", label: "Choisir…" },
+              ...MATURITE_OPTIONS,
+            ]}
+          />
 
-      {dirigeant ? (
-        <InfoBanner>
-          Pour un dirigeant, les 3 derniers exercices permettent d&apos;appliquer
-          la règle de trajectoire (moyenne si hausse, année N si baisse).
-        </InfoBanner>
+          {historiqueCourt ? (
+            <InfoBanner>
+              Avec un historique court, ce revenu est pris en compte avec
+              prudence. S&apos;il est indispensable au financement, le résultat
+              pourra être « Visite possible ».
+            </InfoBanner>
+          ) : null}
+
+          {maturiteOkTroisAns ? (
+            <Toggle
+              label="Renseigner les 3 derniers exercices"
+              checked={value.utiliserTrajectoire}
+              onChange={(utiliserTrajectoire) =>
+                onChange({ ...value, utiliserTrajectoire })
+              }
+              hint="Optionnel — affine la trajectoire (hausse / baisse). Sinon, indiquez un montant moyen."
+            />
+          ) : null}
+        </>
       ) : null}
 
       {showTraj ? (
@@ -99,15 +128,19 @@ function BlocRevenu({
         <MoneyField
           label={
             value.profil.startsWith("micro_")
-              ? "Chiffre d'affaires mensuel brut"
-              : "Revenu mensuel net"
+              ? "Chiffre d'affaires mensuel moyen"
+              : besoinMaturite
+                ? "Revenu mensuel moyen"
+                : "Revenu mensuel net"
           }
           value={value.montantMensuel}
           onChange={(montantMensuel) => onChange({ ...value, montantMensuel })}
           hint={
             value.profil.startsWith("micro_")
               ? "Un taux de retenue prudent sera appliqué selon votre activité"
-              : "Net imposable ou pension nette"
+              : besoinMaturite
+                ? "Moyenne de référence de votre activité"
+                : "Net imposable ou pension nette"
           }
         />
       )}

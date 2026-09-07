@@ -90,17 +90,11 @@ Lecture seule du montant final fixé par l'agent (jamais d'édition client).
 | CDD / Intérim | 100 % de la moyenne fiscale annuelle | `BANKING_PRACTICE` |
 | Portage salarial | 100 % du salaire net | `BANKING_PRACTICE` |
 | Retraité | 100 % de la pension nette | `BANKING_PRACTICE` |
-| Dirigeant / Gérant / Artisan-Commerçant | Trajectoire triennale (§ ci-dessous) | `ENGINE_PRUDENTIAL_RULE` |
+| Dirigeant / Gérant / Artisan-Commerçant | Moyenne déclarée ou trajectoire triennale (§3.2 / § ci-dessous) | `ENGINE_PRUDENTIAL_RULE` |
 | Micro-entreprise (Vente) | 29 % du CA brut | `ENGINE_PRUDENTIAL_RULE` |
 | Micro-entreprise (Prestation BIC) | 50 % du CA brut | `ENGINE_PRUDENTIAL_RULE` |
 | Micro-entreprise (Libéral BNC) | 66 % du CA brut | `ENGINE_PRUDENTIAL_RULE` |
 | Profession libérale EI/BNC / Intermittent | 100 % de la référence propre retenue | `ENGINE_PRUDENTIAL_RULE` |
-
-### Règle de Trajectoire Triennale (Indépendants, Dirigeants) — `ENGINE_PRUDENTIAL_RULE`
-Examen des 3 derniers exercices ($N-2$, $N-1$, $N$) :
-- Trajectoire **stable ou en hausse** ($N-2 \le N-1 \le N$) : moyenne arithmétique des 3 exercices.
-- Trajectoire **en baisse** : retenir uniquement l'année $N$ (prudence).
-- Situation dépassant les capacités d'analyse du MVP → traiter comme revenu **partiellement exploitable** (§7.4 B) → plafond Orange si ce revenu est **déterminant** (§7.5).
 
 ### 3.1 CDI en période d'essai — `ENGINE_PRUDENTIAL_RULE`
 - **Ne pas** traiter automatiquement comme `revenu retenu = 0 €` (ce n'est **pas** une règle réglementaire).
@@ -110,6 +104,32 @@ Examen des 3 derniers exercices ($N-2$, $N-1$, $N$) :
   - Finançabilité **dépend** de ce CDI en période d'essai → 🟠 **ORANGE** max.
   - Emprunteur **seul** en période d'essai, finançable une fois la situation sécurisée → plutôt 🟠 **ORANGE** que Rouge systématique uniquement à cause de la période d'essai.
   - Non finançable même dans la configuration réaliste la plus favorable → 🔴 **ROUGE**.
+
+### 3.2 Maturité d'activité + moyenne (chemin par défaut) — `ENGINE_PRUDENTIAL_RULE`
+Profils concernés : dirigeant / gérant / artisan, micro-entreprises, profession libérale EI/BNC, intermittent.
+
+**Collecte MVP (simplification)** :
+1. Demander la **maturité** de l'activité : `< 1 an` / `1–2 ans` / `3 ans ou plus`.
+2. Demander un **montant moyen** (CA ou revenu de référence, mensuel ou annuel selon le champ UI) — **chemin par défaut**.
+3. Les **3 exercices** ($N-2$, $N-1$, $N$) sont **optionnels** (raffinement trajectoire), proposés surtout si maturité ≥ 3 ans.
+4. **Interdit** : inventer des exercices à 0 € pour les années manquantes (fausse trajectoire « en baisse »).
+
+**Classe d'exploitabilité** (§7.4) :
+| Maturité / saisie | Classe | Montant retenu |
+|---|---|---|
+| 3 exercices renseignés | **A** | Trajectoire triennale (§ ci-dessous) |
+| ≥ 3 ans + moyenne seule | **A** | Moyenne × taux de retenue du profil |
+| 1–2 ans + moyenne | **B** | Idem (règle prudente) + test déterminant §7.5 |
+| < 1 an + moyenne | **B** | Idem + test déterminant §7.5 |
+
+Le statut pro **ne plafonne jamais seul** à Orange. Plafond Orange uniquement si le revenu classe B est **déterminant** (§7.5).
+
+### Règle de Trajectoire Triennale (Indépendants, Dirigeants) — `ENGINE_PRUDENTIAL_RULE`
+Examen des 3 derniers exercices ($N-2$, $N-1$, $N$) **lorsqu'ils sont fournis** :
+- Trajectoire **stable ou en hausse** ($N-2 \le N-1 \le N$) : moyenne arithmétique des 3 exercices.
+- Trajectoire **en baisse** : retenir uniquement l'année $N$ (prudence).
+- Situation dépassant les capacités d'analyse du MVP → traiter comme revenu **partiellement exploitable** (§7.4 B) → plafond Orange si ce revenu est **déterminant** (§7.5).
+- Sans les 3 exercices : appliquer §3.2 (moyenne + maturité), **pas** une trajectoire fictive.
 
 ---
 
@@ -340,7 +360,7 @@ Avant de plafonner à Orange pour incertitude :
 **L'incertitude ne dégrade le verdict que lorsqu'elle est déterminante pour la finançabilité.**
 
 ### 7.6 Dirigeants / indépendants / libéraux / micro
-Appliquer les taux et trajectoire de §3. Qualifier chaque méthode (`HCSF` / `BANKING_PRACTICE` / `ENGINE_PRUDENTIAL_RULE`). Ne pas inventer de règle bancaire universelle. Au-delà des capacités MVP → **ORANGE / analyse complémentaire** plutôt qu'une fausse précision.
+Appliquer §3.2 (maturité + moyenne par défaut) et la trajectoire de §3 **si** les 3 exercices sont fournis. Qualifier chaque méthode (`HCSF` / `BANKING_PRACTICE` / `ENGINE_PRUDENTIAL_RULE`). Ne pas inventer de règle bancaire universelle ni d'années manquantes. Historique court (< 3 ans) → classe **B** ; plafond Orange seulement si déterminant (§7.5). Au-delà des capacités MVP → **ORANGE / analyse complémentaire** plutôt qu'une fausse précision.
 
 ### 7.7 CDI période d'essai
 Voir §3.1. Même logique §7.5.

@@ -1,6 +1,6 @@
 /**
  * Calcul des revenus retenus — revenu par revenu.
- * Source : 03-financial-engine.md §3, §4bis, §7.4.
+ * Source : 03-financial-engine.md §3, §3.2, §4bis, §7.4.
  */
 
 import type { ConstantesMoteur } from "./constantes";
@@ -8,6 +8,7 @@ import type {
   ClasseExploitabilite,
   EmprunteurInput,
   LigneDynamiqueInput,
+  MaturiteActivite,
   ProfilProfessionnel,
   RevenuAnalyse,
   RevenuProfessionnelInput,
@@ -18,6 +19,32 @@ export type OptionsRevenus = {
   /** Si true, exclut les revenus classe B et C (test déterminant §7.5). */
   exclureIncertains?: boolean;
 };
+
+/** Profils pour lesquels la maturité d'activité conditionne la classe (§3.2). */
+export function profilBesoinMaturite(profil: ProfilProfessionnel): boolean {
+  return (
+    profil === "dirigeant_gerant_artisan" ||
+    profil === "micro_vente" ||
+    profil === "micro_prestation_bic" ||
+    profil === "micro_liberal_bnc" ||
+    profil === "liberal_ei_bnc" ||
+    profil === "intermittent"
+  );
+}
+
+/**
+ * Classe A/B selon maturité + présence de trajectoire (§3.2).
+ * `null` = laisser la déduction par défaut du profil.
+ */
+export function classeDepuisMaturite(
+  maturite: MaturiteActivite | undefined,
+  hasTrajectoire: boolean,
+): ClasseExploitabilite | null {
+  if (hasTrajectoire) return "A";
+  if (!maturite) return null;
+  if (maturite === "trois_ans_ou_plus") return "A";
+  return "B";
+}
 
 function classeParDefaut(profil: ProfilProfessionnel): ClasseExploitabilite {
   switch (profil) {
@@ -39,6 +66,20 @@ function classeParDefaut(profil: ProfilProfessionnel): ClasseExploitabilite {
       return _exhaustive;
     }
   }
+}
+
+function resoudreClasse(revenu: RevenuProfessionnelInput): ClasseExploitabilite {
+  if (revenu.classeForcee) return revenu.classeForcee;
+
+  if (profilBesoinMaturite(revenu.profil)) {
+    const depuisMaturite = classeDepuisMaturite(
+      revenu.maturiteActivite,
+      Boolean(revenu.trajectoireAnnuelle),
+    );
+    if (depuisMaturite) return depuisMaturite;
+  }
+
+  return classeParDefaut(revenu.profil);
 }
 
 /**
@@ -85,7 +126,7 @@ function analyserRevenuPro(
   c: ConstantesMoteur,
   index: number,
 ): RevenuAnalyse {
-  const classe = revenu.classeForcee ?? classeParDefaut(revenu.profil);
+  const classe = resoudreClasse(revenu);
   const source = `${attribution}:${revenu.profil}#${index}`;
 
   if (classe === "C") {
@@ -131,7 +172,7 @@ function analyserRevenuPro(
     };
   }
 
-  // Retenue 100 % (CDI, CDD, portage, retraite, libéral, intermittent, dirigeant sans trajectoire)
+  // Retenue 100 % (CDI, CDD, portage, retraite, libéral, intermittent, dirigeant moyenne)
   return {
     source,
     attribution,

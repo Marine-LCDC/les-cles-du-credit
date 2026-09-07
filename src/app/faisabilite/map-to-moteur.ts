@@ -1,6 +1,7 @@
 import {
   type SimulationInput,
   type RevenuProfessionnelInput,
+  profilBesoinMaturite,
 } from "@/lib/moteur";
 import {
   parseNombreFr,
@@ -13,8 +14,20 @@ function mapRevenuPro(form: RevenuProForm): RevenuProfessionnelInput {
     profil: form.profil,
   };
 
-  const dirigeant = form.profil === "dirigeant_gerant_artisan";
-  const useTrajectoire = dirigeant || form.utiliserTrajectoire;
+  const besoinMaturite = profilBesoinMaturite(form.profil);
+  const maturite =
+    besoinMaturite && form.maturiteActivite
+      ? form.maturiteActivite
+      : undefined;
+
+  if (maturite) {
+    base.maturiteActivite = maturite;
+  }
+
+  const useTrajectoire =
+    besoinMaturite &&
+    form.utiliserTrajectoire &&
+    form.maturiteActivite === "trois_ans_ou_plus";
 
   if (useTrajectoire) {
     const n2 = parseNombreFr(form.nMoins2) ?? 0;
@@ -78,17 +91,8 @@ export function mapWizardToSimulation(state: WizardState): SimulationInput {
     ? (parseNombreFr(state.travauxMontant) ?? 0)
     : 0;
 
-  const scenario =
-    state.scenarioAncienBien === ""
-      ? null
-      : state.scenarioAncienBien;
-
   return {
     typeProjet: state.typeProjet,
-    dureeMaxLocativeMarcheAnnees:
-      state.typeProjet === "investissement_locatif"
-        ? (parseNombreFr(state.dureeMaxLocative) ?? 20)
-        : undefined,
     bien: {
       prixAcquisition: parseNombreFr(state.prixAcquisition) ?? 0,
       travaux,
@@ -96,8 +100,7 @@ export function mapWizardToSimulation(state: WizardState): SimulationInput {
     },
     foyer: {
       emprunteurs,
-      personnesACharge: Math.floor(parseNombreFr(state.personnesACharge) ?? 0),
-      lignesDynamiques: lignes,
+      personnesACharge: parseNombreFr(state.personnesACharge) ?? 0,
       logementActuel: {
         statut: state.statutLogement,
         chargeLogementMensuelle:
@@ -106,24 +109,27 @@ export function mapWizardToSimulation(state: WizardState): SimulationInput {
             : (parseNombreFr(state.chargeLogementMensuelle) ?? 0),
         capitalRestantDu: parseNombreFr(state.capitalRestantDu) ?? undefined,
         prixVenteEstime: parseNombreFr(state.prixVenteEstime) ?? undefined,
-        scenarioAncienBien: scenario,
+        scenarioAncienBien: state.scenarioAncienBien || null,
         loyerRestantApresOperation:
           parseNombreFr(state.loyerRestantApresOperation) ?? undefined,
         loyerAttenduAncienBien:
-          scenario === "location"
-            ? (parseNombreFr(state.loyerAttenduAncienBien) ?? undefined)
-            : undefined,
+          parseNombreFr(state.loyerAttenduAncienBien) ?? undefined,
       },
       liquidites: {
         epargneDisponible: parseNombreFr(state.epargneDisponible) ?? 0,
         epargneMensuelleMoyenne:
           parseNombreFr(state.epargneMensuelleMoyenne) ?? 0,
       },
+      lignesDynamiques: lignes,
     },
     financement: {
       apport: parseNombreFr(state.apport) ?? 0,
       tauxNominalAnnuel: parseNombreFr(state.tauxNominal) ?? 0,
       tauxAssuranceAnnuel: parseNombreFr(state.tauxAssurance) ?? 0,
     },
+    dureeMaxLocativeMarcheAnnees:
+      state.typeProjet === "investissement_locatif"
+        ? (parseNombreFr(state.dureeMaxLocative) ?? undefined)
+        : undefined,
   };
 }

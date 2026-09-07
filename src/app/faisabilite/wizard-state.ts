@@ -5,6 +5,7 @@
 
 import type {
   AttributionLigne,
+  MaturiteActivite,
   ProfilProfessionnel,
   ScenarioAncienBien,
   StatutLogement,
@@ -12,6 +13,7 @@ import type {
   TypeLigneDynamique,
   TypeProjet,
 } from "@/lib/moteur";
+import { profilBesoinMaturite } from "@/lib/moteur";
 
 export const TOTAL_ETAPES = 7;
 
@@ -40,9 +42,11 @@ export type IdentiteEmprunteur = {
 
 export type RevenuProForm = {
   profil: ProfilProfessionnel;
-  /** Net / pension / CA mensuel selon profil */
+  /** Net / pension / CA mensuel moyen selon profil (§3.2) */
   montantMensuel: string;
-  /** Pour dirigeants / micros avec historique */
+  /** Maturité d'activité — profils indépendants / micro / libéral */
+  maturiteActivite: MaturiteActivite | "";
+  /** Optionnel : raffiner avec les 3 exercices (si maturité ≥ 3 ans) */
   utiliserTrajectoire: boolean;
   nMoins2: string;
   nMoins1: string;
@@ -107,6 +111,7 @@ export function revenuProInitial(): RevenuProForm {
   return {
     profil: "cdi_confirme",
     montantMensuel: "",
+    maturiteActivite: "",
     utiliserTrajectoire: false,
     nMoins2: "",
     nMoins1: "",
@@ -190,16 +195,21 @@ export function parseNombreFr(raw: string): number | null {
   return n;
 }
 
+export const MATURITE_OPTIONS: {
+  value: MaturiteActivite;
+  label: string;
+}[] = [
+  { value: "moins_1_an", label: "Moins d'1 an" },
+  { value: "un_a_deux_ans", label: "1 à 2 ans" },
+  { value: "trois_ans_ou_plus", label: "3 ans ou plus" },
+];
+
+/** @deprecated Préférer profilBesoinMaturite — la trajectoire est optionnelle. */
 export function profilBesoinTrajectoire(profil: ProfilProfessionnel): boolean {
-  return (
-    profil === "dirigeant_gerant_artisan" ||
-    profil === "micro_vente" ||
-    profil === "micro_prestation_bic" ||
-    profil === "micro_liberal_bnc" ||
-    profil === "liberal_ei_bnc" ||
-    profil === "intermittent"
-  );
+  return profilBesoinMaturite(profil);
 }
+
+export { profilBesoinMaturite };
 
 export function nouveauIdLigne(): string {
   return `l-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;

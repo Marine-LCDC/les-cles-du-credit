@@ -2,6 +2,7 @@
  * Validation légère par étape — messages conformes au guide copywriting.
  */
 
+import { profilBesoinMaturite } from "@/lib/moteur";
 import {
   parseNombreFr,
   type RevenuProForm,
@@ -15,18 +16,34 @@ function requisNombre(raw: string, label: string): string | null {
 }
 
 function validerRevenu(rev: RevenuProForm, qui: string): string | null {
-  const dirigeant = rev.profil === "dirigeant_gerant_artisan";
-  const useTraj = dirigeant || rev.utiliserTrajectoire;
+  const besoinMaturite = profilBesoinMaturite(rev.profil);
 
-  if (useTraj) {
-    if (
-      parseNombreFr(rev.nMoins2) === null ||
-      parseNombreFr(rev.nMoins1) === null ||
-      parseNombreFr(rev.n) === null
-    ) {
-      return `Il manque encore les 3 exercices pour ${qui}`;
+  if (besoinMaturite) {
+    if (!rev.maturiteActivite) {
+      return `Il manque encore l'ancienneté d'activité pour ${qui}`;
     }
-    return null;
+
+    const useTraj =
+      rev.utiliserTrajectoire &&
+      rev.maturiteActivite === "trois_ans_ou_plus";
+
+    if (useTraj) {
+      if (
+        parseNombreFr(rev.nMoins2) === null ||
+        parseNombreFr(rev.nMoins1) === null ||
+        parseNombreFr(rev.n) === null
+      ) {
+        return `Il manque encore les 3 exercices pour ${qui}`;
+      }
+      return null;
+    }
+
+    return requisNombre(
+      rev.montantMensuel,
+      rev.profil.startsWith("micro_")
+        ? `le chiffre d'affaires moyen de ${qui}`
+        : `le revenu moyen de ${qui}`,
+    );
   }
 
   return requisNombre(rev.montantMensuel, `le revenu de ${qui}`);

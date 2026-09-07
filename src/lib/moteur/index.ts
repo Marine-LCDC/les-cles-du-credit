@@ -29,6 +29,8 @@ export {
   aggreguerRevenusRetenus,
   lignesEffectives,
   lignesIssuesDuLogement,
+  profilBesoinMaturite,
+  classeDepuisMaturite,
 } from "./revenus-retenus";
 export {
   calculerIndicateurs,

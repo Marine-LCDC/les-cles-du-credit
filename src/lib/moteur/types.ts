@@ -56,20 +56,34 @@ export type TrajectoireTriennale = {
   n: number;
 };
 
+/**
+ * Ancienneté / maturité de l'activité (§3.2).
+ * Pour dirigeants, micros, libéraux, intermittents.
+ */
+export type MaturiteActivite =
+  | "moins_1_an"
+  | "un_a_deux_ans"
+  | "trois_ans_ou_plus";
+
 export type RevenuProfessionnelInput = {
   profil: ProfilProfessionnel;
   /**
-   * Montant mensuel de référence (net imposable, pension, etc.)
-   * pour les profils à retenue 100 % simple.
+   * Montant mensuel de référence (net imposable, pension, CA mensuel, etc.)
+   * pour les profils à retenue simple ou moyenne déclarée (§3.2).
    */
   montantMensuel?: number;
   /**
    * CA / bénéfice annuel brut pour micro ou trajectoire dirigeants.
-   * Si fourni pour un profil à trajectoire, prioritaire sur montantMensuel.
+   * Si fourni, prioritaire sur montantMensuel pour le calcul de retenue.
    */
   trajectoireAnnuelle?: TrajectoireTriennale;
   /**
-   * Forcer la classe d'exploitabilité (sinon déduite du profil).
+   * Maturité de l'activité (§3.2). Influe sur la classe A/B
+   * lorsque la trajectoire triennale n'est pas fournie.
+   */
+  maturiteActivite?: MaturiteActivite;
+  /**
+   * Forcer la classe d'exploitabilité (sinon déduite du profil + maturité).
    * Classe C = revenus exclus du calcul.
    */
   classeForcee?: ClasseExploitabilite;

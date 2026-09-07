@@ -8,6 +8,7 @@ import { describe, it } from "node:test";
 import {
   aggreguerRevenusRetenus,
   appliquerTrajectoireTriennale,
+  classeDepuisMaturite,
   CONSTANTES_DEFAUT,
   dureeReference,
   executerMoteur,
@@ -191,6 +192,53 @@ describe("Unités — trajectoire, frais, durée, micro", () => {
       CONSTANTES_DEFAUT,
     );
     assert.equal(agg.totalRetenuMensuel, 2_900);
+  });
+
+  it("§3.2 maturité < 3 ans → classe B ; ≥ 3 ans ou trajectoire → A", () => {
+    assert.equal(classeDepuisMaturite("moins_1_an", false), "B");
+    assert.equal(classeDepuisMaturite("un_a_deux_ans", false), "B");
+    assert.equal(classeDepuisMaturite("trois_ans_ou_plus", false), "A");
+    assert.equal(classeDepuisMaturite("moins_1_an", true), "A");
+    assert.equal(classeDepuisMaturite(undefined, false), null);
+
+    const recent = aggreguerRevenusRetenus(
+      [
+        {
+          id: "E1",
+          revenusProfessionnels: [
+            {
+              profil: "dirigeant_gerant_artisan",
+              montantMensuel: 3_500,
+              maturiteActivite: "moins_1_an",
+            },
+          ],
+        },
+      ],
+      [],
+      CONSTANTES_DEFAUT,
+    );
+    assert.equal(recent.hasRevenusIncertains, true);
+    assert.equal(recent.revenusAnalyses[0]?.classe, "B");
+    assert.equal(recent.totalRetenuMensuel, 3_500);
+
+    const mature = aggreguerRevenusRetenus(
+      [
+        {
+          id: "E1",
+          revenusProfessionnels: [
+            {
+              profil: "dirigeant_gerant_artisan",
+              montantMensuel: 3_500,
+              maturiteActivite: "trois_ans_ou_plus",
+            },
+          ],
+        },
+      ],
+      [],
+      CONSTANTES_DEFAUT,
+    );
+    assert.equal(mature.hasRevenusIncertains, false);
+    assert.equal(mature.revenusAnalyses[0]?.classe, "A");
   });
 });
 
@@ -464,6 +512,101 @@ describe("15 cas métier — verdict", () => {
         epargneMensuelle: 600,
         prix: 220_000,
       }),
+      "VERT",
+    );
+    assert.equal(
+      r.referenceSimulation.agentVerdict.plafonneParIncertitude,
+      false,
+    );
+  });
+
+  /** 12bis — Dirigeant activité récente (moyenne) déterminant → ORANGE */
+  it("12bis. Dirigeant maturité < 1 an, revenu déterminant → ORANGE", () => {
+    const r = assertVerdict(
+      {
+        ...baseSimulation({
+          chargeLogement: 900,
+          apport: 50_000,
+          epargneDisponible: 60_000,
+          epargneMensuelle: 400,
+        }),
+        foyer: {
+          ...baseSimulation().foyer,
+          emprunteurs: [
+            {
+              id: "E1",
+              revenusProfessionnels: [
+                {
+                  profil: "dirigeant_gerant_artisan",
+                  montantMensuel: 4_000,
+                  maturiteActivite: "moins_1_an",
+                },
+              ],
+            },
+          ],
+          logementActuel: {
+            statut: "locataire",
+            chargeLogementMensuelle: 900,
+          },
+          liquidites: {
+            epargneDisponible: 60_000,
+            epargneMensuelleMoyenne: 400,
+          },
+          personnesACharge: 0,
+          lignesDynamiques: [],
+        },
+        financement: {
+          apport: 50_000,
+          tauxNominalAnnuel: 3.5,
+          tauxAssuranceAnnuel: 0.34,
+        },
+      },
+      "ORANGE",
+    );
+    assert.equal(r.referenceSimulation.agentVerdict.plafonneParIncertitude, true);
+  });
+
+  /** 12ter — Dirigeant mature (moyenne seule, sans 3 exercices) → VERT possible */
+  it("12ter. Dirigeant ≥ 3 ans, moyenne seule (sans trajectoire) → VERT", () => {
+    const r = assertVerdict(
+      {
+        ...baseSimulation({
+          chargeLogement: 900,
+          apport: 50_000,
+          epargneDisponible: 60_000,
+          epargneMensuelle: 400,
+        }),
+        foyer: {
+          ...baseSimulation().foyer,
+          emprunteurs: [
+            {
+              id: "E1",
+              revenusProfessionnels: [
+                {
+                  profil: "dirigeant_gerant_artisan",
+                  montantMensuel: 4_000,
+                  maturiteActivite: "trois_ans_ou_plus",
+                },
+              ],
+            },
+          ],
+          logementActuel: {
+            statut: "locataire",
+            chargeLogementMensuelle: 900,
+          },
+          liquidites: {
+            epargneDisponible: 60_000,
+            epargneMensuelleMoyenne: 400,
+          },
+          personnesACharge: 0,
+          lignesDynamiques: [],
+        },
+        financement: {
+          apport: 50_000,
+          tauxNominalAnnuel: 3.5,
+          tauxAssuranceAnnuel: 0.34,
+        },
+      },
       "VERT",
     );
     assert.equal(
