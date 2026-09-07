@@ -11,7 +11,10 @@ import {
   fusionnerConstantes,
   type ConstantesMoteur,
 } from "./constantes";
-import { aggreguerRevenusRetenus } from "./revenus-retenus";
+import {
+  aggreguerRevenusRetenus,
+  lignesEffectives,
+} from "./revenus-retenus";
 import {
   appliquerArbreDecision,
   appliquerTestDeterminant,
@@ -24,6 +27,8 @@ export * from "./constantes";
 export {
   appliquerTrajectoireTriennale,
   aggreguerRevenusRetenus,
+  lignesEffectives,
+  lignesIssuesDuLogement,
 } from "./revenus-retenus";
 export {
   calculerIndicateurs,
@@ -55,9 +60,13 @@ export function executerMoteur(
   const indicateursAvec = calculerIndicateurs(input, c);
   const verdictAvec = appliquerArbreDecision(indicateursAvec, c);
 
+  const lignes = lignesEffectives(
+    input.foyer.lignesDynamiques,
+    input.foyer.logementActuel,
+  );
   const { hasRevenusIncertains } = aggreguerRevenusRetenus(
     input.foyer.emprunteurs,
-    input.foyer.lignesDynamiques,
+    lignes,
     c,
   );
 

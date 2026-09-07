@@ -168,6 +168,7 @@ describe("5 profils types — QA 1.6", () => {
             chargeLogementMensuelle: 1_100,
             capitalRestantDu: 80_000,
             scenarioAncienBien: "location",
+            loyerAttenduAncienBien: 1_400,
           },
           liquidites: {
             epargneDisponible: 40_000,
@@ -184,11 +185,19 @@ describe("5 profils types — QA 1.6", () => {
       "Profil C",
     );
     assert.equal(r.referenceSimulation.indicateurs.dureeReferenceAnnees, 20);
-    // Trajectoire baisse → N = 48 000 / 12 = 4 000 + fonciers 560
+    // Trajectoire baisse → N = 48 000 / 12 = 4 000
+    // + fonciers lignes 800×0,7 = 560
+    // + loyer attendu ancien bien 1400×0,7 = 980
+    // = 5 540
     assert.ok(
       Math.abs(
-        r.referenceSimulation.indicateurs.revenusRetenusMensuels - 4_560,
+        r.referenceSimulation.indicateurs.revenusRetenusMensuels - 5_540,
       ) < 1,
+    );
+    // Mensualité ancienne RP injectée automatiquement
+    assert.equal(
+      r.referenceSimulation.indicateurs.creditsConservesMensuels,
+      1_100,
     );
   });
 

@@ -34,6 +34,7 @@ function baseSimulation(
     capitalRestantDu?: number;
     prixVenteEstime?: number;
     loyerRestant?: number;
+    loyerAttenduAncienBien?: number;
     epargneDisponible?: number;
     epargneMensuelle?: number;
     apport?: number;
@@ -91,6 +92,7 @@ function baseSimulation(
         capitalRestantDu: overrides.capitalRestantDu,
         prixVenteEstime: overrides.prixVenteEstime,
         loyerRestantApresOperation: overrides.loyerRestant,
+        loyerAttenduAncienBien: overrides.loyerAttenduAncienBien,
       },
       liquidites: {
         epargneDisponible: overrides.epargneDisponible ?? 50_000,
@@ -513,6 +515,43 @@ describe("15 cas métier — verdict", () => {
         0.01,
     );
     assert.equal(r.referenceSimulation.indicateurs.creditsConservesMensuels, 150);
+  });
+
+  /** 14bis — Ancienne RP conservée en location : auto crédit + loyer */
+  it("14bis. Scénario location : mensualité et loyer attendu injectés sans double saisie", () => {
+    const r = executerMoteur(
+      baseSimulation({
+        revenuMensuel: 5_000,
+        statutLogement: "proprietaire",
+        chargeLogement: 1_100,
+        scenario: "location",
+        loyerAttenduAncienBien: 1_200,
+        lignes: [
+          {
+            type: "credit_conso",
+            montantMensuel: 200,
+            attribution: "E1",
+          },
+        ],
+        apport: 50_000,
+        epargneDisponible: 60_000,
+        prix: 220_000,
+      }),
+    );
+    const ind = r.referenceSimulation.indicateurs;
+    // crédits = conso 200 + mensualité ancienne RP 1100
+    assert.equal(ind.creditsConservesMensuels, 1_300);
+    // revenus = 5000 + 1200×0,7 = 5840
+    assert.ok(Math.abs(ind.revenusRetenusMensuels - 5_840) < 0.01);
+    // RAV = revenus − (nouvelle mensu + 1300) — ancienne RP bien déduite
+    assert.ok(
+      Math.abs(
+        ind.rav -
+          (ind.revenusRetenusMensuels -
+            ind.mensualiteTotale -
+            ind.creditsConservesMensuels),
+      ) < 0.01,
+    );
   });
 
   /** 15 — personal_simulation n'altère pas agent_verdict ; saut ≤ 0 skip filet */

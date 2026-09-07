@@ -125,6 +125,11 @@ $$RAV = \text{revenus mensuels retenus} - \text{charges mensuelles après opéra
 - loyer restant effectivement à payer après l'opération
 - autres charges récurrentes pertinentes (lignes dynamiques de type charge)
 
+### Loyer restant / ancien bien conservé
+- **Scénario `location`** : la `chargeLogementMensuelle` (mensualité de l'ancien crédit) est **automatiquement** ajoutée aux crédits conservés (RAV + taux d'effort). Le `loyerAttenduAncienBien` est **automatiquement** ajouté aux revenus fonciers (× `coefficient_locatif`). Pas de double saisie côté UI.
+- **Scénario `vente`** : l'ancien crédit disparaît (remboursé via la vente) — pas d'injection automatique.
+- **Scénario `indecis`** : pas d'injection auto du crédit ; le champ `loyerRestantApresOperation` couvre une charge de logement encore payée le cas échéant.
+
 ### Seuils prudentiels indicatifs (configurables)
 Ces seuils sont une **règle prudentielle interne** de l'application — **pas** un seuil légal HCSF ni un critère de refus bancaire réglementaire. Ne jamais formuler « RAV < 800 € = dossier bancaire refusé ».
 

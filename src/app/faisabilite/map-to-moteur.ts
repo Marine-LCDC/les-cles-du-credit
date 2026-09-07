@@ -109,6 +109,10 @@ export function mapWizardToSimulation(state: WizardState): SimulationInput {
         scenarioAncienBien: scenario,
         loyerRestantApresOperation:
           parseNombreFr(state.loyerRestantApresOperation) ?? undefined,
+        loyerAttenduAncienBien:
+          scenario === "location"
+            ? (parseNombreFr(state.loyerAttenduAncienBien) ?? undefined)
+            : undefined,
       },
       liquidites: {
         epargneDisponible: parseNombreFr(state.epargneDisponible) ?? 0,

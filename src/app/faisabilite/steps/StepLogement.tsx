@@ -85,8 +85,27 @@ export function StepLogement({ state, patch }: Props) {
             />
           ) : null}
 
-          {state.scenarioAncienBien === "indecis" ||
-          state.scenarioAncienBien === "location" ? (
+          {state.scenarioAncienBien === "location" ? (
+            <>
+              <InfoBanner>
+                Comme vous conservez ce logement, sa mensualité de crédit
+                restera prise en compte automatiquement. Indiquez seulement le
+                loyer que vous comptez encaisser — une part prudente sera
+                retenue dans l&apos;analyse. Vous n&apos;aurez pas à le
+                ressaisir à l&apos;étape suivante.
+              </InfoBanner>
+              <MoneyField
+                label="Loyer mensuel attendu sur ce logement"
+                value={state.loyerAttenduAncienBien}
+                onChange={(loyerAttenduAncienBien) =>
+                  patch({ loyerAttenduAncienBien })
+                }
+                hint="Laissez vide s'il n'y a pas encore de locataire"
+              />
+            </>
+          ) : null}
+
+          {state.scenarioAncienBien === "indecis" ? (
             <MoneyField
               label="Loyer éventuellement conservé après l'opération"
               value={state.loyerRestantApresOperation}

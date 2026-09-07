@@ -85,7 +85,10 @@ export type WizardState = {
   capitalRestantDu: string;
   scenarioAncienBien: ScenarioAncienBien | "";
   prixVenteEstime: string;
+  /** Loyer encore à payer (scénario indécis / double charge). */
   loyerRestantApresOperation: string;
+  /** Loyer attendu si l'ancien bien est mis en location. */
+  loyerAttenduAncienBien: string;
 
   // Étape 5 — Lignes dynamiques
   lignes: LigneDynamiqueForm[];
@@ -138,6 +141,7 @@ export function etatInitial(): WizardState {
     scenarioAncienBien: "",
     prixVenteEstime: "",
     loyerRestantApresOperation: "",
+    loyerAttenduAncienBien: "",
 
     lignes: [],
 

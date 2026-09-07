@@ -1,6 +1,6 @@
 "use client";
 
-import { MoneyField, SelectField } from "../components/fields";
+import { MoneyField, SelectField, InfoBanner } from "../components/fields";
 import {
   LIGNE_TYPE_OPTIONS,
   nouveauIdLigne,
@@ -17,6 +17,7 @@ type Props = {
 export function StepLignes({ state, patch }: Props) {
   const showCo =
     state.coEmprunt || state.regime === "marie_communaute";
+  const conserveEnLocation = state.scenarioAncienBien === "location";
 
   const attributionOptions: { value: AttributionLigne; label: string }[] =
     showCo
@@ -65,6 +66,18 @@ export function StepLignes({ state, patch }: Props) {
         Crédits en cours, loyers perçus, pensions… Ajoutez autant de lignes que
         nécessaire. Cette étape est facultative.
       </p>
+
+      {conserveEnLocation ? (
+        <InfoBanner>
+          Votre crédit sur le logement conservé
+          {state.loyerAttenduAncienBien.trim()
+            ? " et le loyer attendu sur ce bien"
+            : ""}{" "}
+          sont déjà pris en compte. Ajoutez ici uniquement d&apos;autres
+          revenus ou crédits (autres biens locatifs, crédits conso, etc.) —
+          sans les ressaisir.
+        </InfoBanner>
+      ) : null}
 
       {state.lignes.length === 0 ? (
         <p className="mb-4 rounded-[12px] border border-dashed border-[#e6dcc8] bg-white/50 px-4 py-6 text-center text-sm text-neutral-muted">

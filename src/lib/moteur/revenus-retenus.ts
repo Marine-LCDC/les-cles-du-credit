@@ -250,6 +250,54 @@ export function aggreguerRevenusRetenus(
   };
 }
 
+/**
+ * Lignes synthétiques issues du scénario logement (sans double saisie UI).
+ * — location : mensualité actuelle → crédit immo conservé
+ * — location : loyer attendu → revenus fonciers (décote appliquée ensuite)
+ */
+export function lignesIssuesDuLogement(
+  logement: {
+    chargeLogementMensuelle: number;
+    scenarioAncienBien?: "vente" | "location" | "indecis" | null;
+    loyerAttenduAncienBien?: number;
+  },
+): LigneDynamiqueInput[] {
+  if (logement.scenarioAncienBien !== "location") return [];
+
+  const synthetiques: LigneDynamiqueInput[] = [];
+
+  if (logement.chargeLogementMensuelle > 0) {
+    synthetiques.push({
+      type: "credit_immobilier",
+      montantMensuel: logement.chargeLogementMensuelle,
+      attribution: "foyer",
+    });
+  }
+
+  const loyer = logement.loyerAttenduAncienBien ?? 0;
+  if (loyer > 0) {
+    synthetiques.push({
+      type: "revenus_fonciers",
+      montantMensuel: loyer,
+      attribution: "foyer",
+    });
+  }
+
+  return synthetiques;
+}
+
+/** Lignes dynamiques + effets automatiques du scénario logement. */
+export function lignesEffectives(
+  lignes: LigneDynamiqueInput[],
+  logement: {
+    chargeLogementMensuelle: number;
+    scenarioAncienBien?: "vente" | "location" | "indecis" | null;
+    loyerAttenduAncienBien?: number;
+  },
+): LigneDynamiqueInput[] {
+  return [...lignes, ...lignesIssuesDuLogement(logement)];
+}
+
 /** Somme des mensualités de crédits conservés (conso + immo dynamiques). */
 export function totalCreditsConserves(
   lignes: LigneDynamiqueInput[],

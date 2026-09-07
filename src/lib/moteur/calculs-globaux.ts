@@ -10,6 +10,7 @@ import {
 import type { ConstantesMoteur } from "./constantes";
 import {
   aggreguerRevenusRetenus,
+  lignesEffectives,
   totalAutresCharges,
   totalCreditsConserves,
   type OptionsRevenus,
@@ -161,17 +162,20 @@ export function calculerIndicateurs(
     tauxAssuranceAnnuel: input.financement.tauxAssuranceAnnuel,
   });
 
+  const lignes = lignesEffectives(
+    input.foyer.lignesDynamiques,
+    input.foyer.logementActuel,
+  );
+
   const revenus = aggreguerRevenusRetenus(
     input.foyer.emprunteurs,
-    input.foyer.lignesDynamiques,
+    lignes,
     c,
     { exclureIncertains: options.exclureIncertains },
   );
 
-  const creditsConserves = totalCreditsConserves(
-    input.foyer.lignesDynamiques,
-  );
-  const autresCharges = totalAutresCharges(input.foyer.lignesDynamiques);
+  const creditsConserves = totalCreditsConserves(lignes);
+  const autresCharges = totalAutresCharges(lignes);
   const loyerRestant =
     input.foyer.logementActuel.loyerRestantApresOperation ?? 0;
 

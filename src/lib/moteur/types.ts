@@ -112,8 +112,15 @@ export type LogementActuelInput = {
   /**
    * Loyer restant effectivement à payer après l'opération
    * (ex. indécis / double charge partielle).
+   * Ne pas utiliser pour la mensualité du bien conservé en location
+   * — celle-ci est reprise automatiquement via chargeLogementMensuelle.
    */
   loyerRestantApresOperation?: number;
+  /**
+   * Loyer mensuel attendu si l'ancien bien est mis en location.
+   * Injecté comme revenu foncier (décote coefficient_locatif).
+   */
+  loyerAttenduAncienBien?: number;
 };
 
 export type LiquiditesInput = {
