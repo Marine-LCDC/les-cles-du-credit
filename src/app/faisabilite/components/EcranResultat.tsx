@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   calculerIndicateurs,
@@ -16,7 +15,6 @@ import {
   MENTION_BAS_ECRAN,
   mentionFraisNotaire,
 } from "@/lib/legal-copy";
-import { OptInMarketing } from "@/components/OptInMarketing";
 import { formatEuros } from "./frais-preview";
 import type { WizardState } from "../wizard-state";
 import { parseNombreFr } from "../wizard-state";
@@ -73,14 +71,24 @@ function sousTexteBadge(
   }
 }
 
-function phraseOptIn(niveau: VerdictNiveau): string {
+/** Teaser lead magnet acquéreur — capture email plus tard. */
+function teaserGuide(niveau: VerdictNiveau): { titre: string; corps: string } {
   switch (niveau) {
     case "VERT":
-      return "Votre projet est bien engagé. Pour vos prochains biens, gardez votre simulateur de crédit personnel — c'est gratuit.";
+      return {
+        titre: "Bravo, vous avez un solide dossier",
+        corps: "Un guide arrive bientôt pour expliquer ces chiffres et donner toutes les chances à votre projet d'aboutir.",
+      };
     case "ORANGE":
-      return "Pour affiner votre capacité et préparer l'échange avec la banque, gardez votre simulateur personnel — c'est gratuit.";
+      return {
+        titre: "Vous pouvez être finançable",
+        corps: "Un guide arrive bientôt pour vous aider à lire ces indicateurs et renforcer les chances de votre dossier.",
+      };
     case "ROUGE":
-      return "Pour explorer d'autres montages et mieux préparer la suite, gardez votre simulateur personnel — c'est gratuit.";
+      return {
+        titre: "Comprendre et améliorer votre situation",
+        corps: "Un guide arrive bientôt pour expliquer pourquoi le financement paraît difficile aujourd'hui, et comment progresser.",
+      };
   }
 }
 
@@ -133,9 +141,6 @@ export function EcranResultat({
   }, [dureeRef]);
 
   const [dureePerso, setDureePerso] = useState<number | null>(null);
-  const [optIn, setOptIn] = useState(false);
-  const [email, setEmail] = useState("");
-  const [optInEnvoye, setOptInEnvoye] = useState(false);
 
   const indPerso = useMemo(() => {
     if (dureePerso === null) return null;
@@ -157,12 +162,7 @@ export function EcranResultat({
     .filter(Boolean)
     .join(" — ");
 
-  function handleOptIn(e: React.FormEvent) {
-    e.preventDefault();
-    if (!optIn || !email.trim() || !email.includes("@")) return;
-    // Phase 1 : pas encore de backend Brevo — confirmation locale uniquement
-    setOptInEnvoye(true);
-  }
+  const guide = teaserGuide(agentVerdict.niveau);
 
   return (
     <div>
@@ -349,49 +349,15 @@ export function EcranResultat({
         </div>
       ) : null}
 
-      {/* CTA simulateur inversé — pas de PDF (décision produit) */}
-      <Link
-        href="/simulateur"
-        className="mb-4 inline-flex min-h-11 w-full items-center justify-center rounded-[14px] bg-brand px-4 text-sm font-medium text-white transition-colors hover:bg-[#266b5c]"
-      >
-        Ouvrir le simulateur de crédit
-      </Link>
-
-      {/* Opt-in simulateur gratuit */}
+      {/* Teaser guide acquéreur — opt-in plus tard */}
       <div className="mb-3 rounded-[14px] border border-[#e6dcc8] bg-white px-4 py-3.5">
-        {optInEnvoye ? (
-          <p className="text-sm text-neutral">
-            Merci. Vous recevrez votre simulateur dès que l&apos;envoi automatique
-            sera activé.
-          </p>
-        ) : (
-          <form onSubmit={handleOptIn}>
-            <p className="mb-3 text-sm text-neutral leading-relaxed">
-              {phraseOptIn(agentVerdict.niveau)}
-            </p>
-            <div className="mb-3">
-              <OptInMarketing checked={optIn} onChange={setOptIn} />
-            </div>
-            {optIn ? (
-              <>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Votre email"
-                  required
-                  className="mb-3 w-full min-h-10 rounded-[8px] border border-[#e6dcc8] bg-white px-2.5 text-sm text-neutral outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-                />
-                <button
-                  type="submit"
-                  className="inline-flex min-h-10 w-full items-center justify-center rounded-[12px] border border-brand/40 bg-brand-light px-3 text-sm font-medium text-brand"
-                >
-                  Recevoir mon simulateur
-                </button>
-              </>
-            ) : null}
-          </form>
-        )}
+        <p className="text-sm font-medium text-neutral">{guide.titre}</p>
+        <p className="mt-1.5 text-sm leading-relaxed text-neutral-muted">
+          {guide.corps}
+        </p>
+        <p className="mt-2 text-[11px] leading-relaxed text-[#9a9284]">
+          Bientôt disponible — indispensable pour bien réussir votre projet.
+        </p>
       </div>
 
       <button
