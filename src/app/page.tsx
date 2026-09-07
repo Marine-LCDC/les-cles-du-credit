@@ -58,6 +58,16 @@ export default function Home() {
             Simulateur de crédit
           </Link>
         </div>
+
+        <p className="mt-6 text-sm text-neutral-muted">
+          Agent immobilier ?{" "}
+          <Link
+            href="/connexion"
+            className="font-medium text-brand underline-offset-2 hover:underline"
+          >
+            Accéder à l’espace agent
+          </Link>
+        </p>
       </main>
 
       <SiteFooter className="relative z-10" />

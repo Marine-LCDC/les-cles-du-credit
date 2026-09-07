@@ -56,18 +56,30 @@ export function validerEtape(
   switch (etape) {
     case 1: {
       if (!state.ville.trim()) return "Il manque encore la ville du bien";
-      const prix = requisNombre(state.prixAcquisition, "le prix d'acquisition");
-      if (prix) return prix;
-      if (state.travauxNecessaires) {
-        const t = requisNombre(state.travauxMontant, "le montant des travaux");
-        if (t) return t;
+      if (!state.bienVerrouille) {
+        const prix = requisNombre(
+          state.prixAcquisition,
+          "le prix d'acquisition",
+        );
+        if (prix) return prix;
+        if (state.travauxNecessaires) {
+          const t = requisNombre(state.travauxMontant, "le montant des travaux");
+          if (t) return t;
+        }
       }
       if (state.typeProjet === "investissement_locatif") {
-        const d = requisNombre(
-          state.dureeMaxLocative,
-          "la durée max. habituelle pour un locatif",
+        const loyer = requisNombre(
+          state.loyerAttenduLocatif,
+          "le loyer mensuel attendu",
         );
-        if (d) return d;
+        if (loyer) return loyer;
+        if (!state.bienVerrouille) {
+          const d = requisNombre(
+            state.dureeMaxLocative,
+            "la durée max. habituelle pour un locatif",
+          );
+          if (d) return d;
+        }
       }
       return null;
     }

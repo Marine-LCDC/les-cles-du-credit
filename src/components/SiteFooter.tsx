@@ -22,6 +22,13 @@ export function SiteFooter({ className = "" }: { className?: string }) {
         >
           Confidentialité
         </Link>
+        {" · "}
+        <Link
+          href="/connexion"
+          className="text-brand underline-offset-2 hover:underline"
+        >
+          Espace agent
+        </Link>
       </p>
     </footer>
   );

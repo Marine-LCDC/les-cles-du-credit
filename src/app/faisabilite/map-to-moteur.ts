@@ -97,6 +97,9 @@ export function mapWizardToSimulation(state: WizardState): SimulationInput {
       prixAcquisition: parseNombreFr(state.prixAcquisition) ?? 0,
       travaux,
       typeBien: state.typeBien,
+      ...(parseNombreFr(state.fraisAcquisition) !== null
+        ? { fraisAcquisitionEuros: parseNombreFr(state.fraisAcquisition)! }
+        : {}),
     },
     foyer: {
       emprunteurs,

@@ -61,6 +61,12 @@ export type LigneDynamiqueForm = {
 };
 
 export type WizardState = {
+  // Mode lien agent (fiche bien préremplie, lecture seule)
+  bienToken: string | null;
+  bienVerrouille: boolean;
+  /** Frais d'acquisition en € (agent ou estimation auto). */
+  fraisAcquisition: string;
+
   // Étape 1 — Projet
   typeProjet: TypeProjet;
   ville: string;
@@ -121,6 +127,10 @@ export function revenuProInitial(): RevenuProForm {
 
 export function etatInitial(): WizardState {
   return {
+    bienToken: null,
+    bienVerrouille: false,
+    fraisAcquisition: "",
+
     typeProjet: "residence_principale",
     ville: "",
     referenceBien: "",

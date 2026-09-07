@@ -2,11 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ConsentGate } from "@/components/ConsentGate";
 import { SiteFooter } from "@/components/SiteFooter";
+import {
+  formatNombreFr,
+  type BienPublic,
+} from "@/lib/bien-public";
 import { BANDEAU_RESULTAT } from "@/lib/legal-copy";
-import { executerMoteur, type MoteurResult, type SimulationInput } from "@/lib/moteur";
+import {
+  executerMoteur,
+  type MoteurResult,
+  type SimulationInput,
+  type VerdictNiveau,
+} from "@/lib/moteur";
+import { enregistrerSimulationVisiteur } from "./actions";
 import { EcranResultat } from "./components/EcranResultat";
 import { mapWizardToSimulation } from "./map-to-moteur";
 import { StepFinancement } from "./steps/StepFinancement";
@@ -24,18 +34,54 @@ import {
   type WizardState,
 } from "./wizard-state";
 
-export default function FaisabiliteClient() {
+function etatDepuisBien(bien: BienPublic): WizardState {
+  return {
+    ...etatInitial(),
+    bienToken: bien.public_token,
+    bienVerrouille: true,
+    ville: bien.ville,
+    referenceBien: bien.reference,
+    prixAcquisition: formatNombreFr(bien.prix_acquisition),
+    typeBien: bien.type_bien,
+    fraisAcquisition: formatNombreFr(bien.frais_acquisition),
+    travauxNecessaires: bien.travaux_necessaires,
+    travauxMontant: bien.travaux_necessaires
+      ? formatNombreFr(bien.travaux_montant)
+      : "",
+    dureeMaxLocative: String(bien.duree_max_locative_marche),
+  };
+}
+
+function verdictToDb(niveau: VerdictNiveau): "vert" | "orange" | "rouge" {
+  if (niveau === "VERT") return "vert";
+  if (niveau === "ORANGE") return "orange";
+  return "rouge";
+}
+
+type Props = {
+  bienLie: BienPublic | null;
+};
+
+export default function FaisabiliteClient({ bienLie }: Props) {
+  const initial = useMemo(
+    () => (bienLie ? etatDepuisBien(bienLie) : etatInitial()),
+    [bienLie],
+  );
+
   const [consentsOk, setConsentsOk] = useState(false);
   const [disclaimerOk, setDisclaimerOk] = useState(false);
   const [rgpdOk, setRgpdOk] = useState(false);
   const [consentErreur, setConsentErreur] = useState<string | null>(null);
 
   const [etape, setEtape] = useState(1);
-  const [state, setState] = useState<WizardState>(etatInitial);
+  const [state, setState] = useState<WizardState>(initial);
   const [erreur, setErreur] = useState<string | null>(null);
   const [result, setResult] = useState<MoteurResult | null>(null);
   const [simulationInput, setSimulationInput] =
     useState<SimulationInput | null>(null);
+  const [signalStatus, setSignalStatus] = useState<
+    "idle" | "ok" | "error"
+  >("idle");
 
   function patch(partial: Partial<WizardState>) {
     setState((prev) => ({ ...prev, ...partial }));
@@ -54,7 +100,7 @@ export default function FaisabiliteClient() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function goNext() {
+  async function goNext() {
     const err = validerEtape(etape, state);
     if (err) {
       setErreur(err);
@@ -73,6 +119,18 @@ export default function FaisabiliteClient() {
       const output = executerMoteur(input);
       setSimulationInput(input);
       setResult(output);
+      setSignalStatus("idle");
+
+      if (state.bienToken) {
+        const save = await enregistrerSimulationVisiteur({
+          token: state.bienToken,
+          prenom: state.e1.prenom,
+          nom: state.e1.nom,
+          verdict: verdictToDb(output.referenceSimulation.agentVerdict.niveau),
+        });
+        setSignalStatus(save.ok ? "ok" : "error");
+      }
+
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
       setErreur(
@@ -86,6 +144,7 @@ export default function FaisabiliteClient() {
     if (result) {
       setResult(null);
       setSimulationInput(null);
+      setSignalStatus("idle");
       return;
     }
     if (etape > 1) {
@@ -95,7 +154,7 @@ export default function FaisabiliteClient() {
   }
 
   function restart() {
-    setState(etatInitial());
+    setState(bienLie ? etatDepuisBien(bienLie) : etatInitial());
     setEtape(1);
     setResult(null);
     setSimulationInput(null);
@@ -104,6 +163,7 @@ export default function FaisabiliteClient() {
     setDisclaimerOk(false);
     setRgpdOk(false);
     setConsentErreur(null);
+    setSignalStatus("idle");
   }
 
   const progress = !consentsOk
@@ -111,6 +171,8 @@ export default function FaisabiliteClient() {
     : result
       ? 100
       : ((etape - 1) / TOTAL_ETAPES) * 100;
+
+  const backHref = state.bienToken ? `/b/${state.bienToken}` : "/";
 
   return (
     <div className="relative min-h-full overflow-hidden">
@@ -121,7 +183,7 @@ export default function FaisabiliteClient() {
 
       <div className="relative z-10 mx-auto flex w-full max-w-lg flex-col px-4 pb-28 pt-8 sm:px-6 sm:pb-12 sm:pt-10">
         <header className="mb-6 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href={backHref} className="flex items-center gap-2.5">
             <Image
               src="/brand/logo.png"
               alt="Les Clés du Crédit"
@@ -187,12 +249,26 @@ export default function FaisabiliteClient() {
             erreur={consentErreur}
           />
         ) : result && simulationInput ? (
-          <EcranResultat
-            state={state}
-            simulationInput={simulationInput}
-            result={result}
-            onRestart={restart}
-          />
+          <>
+            {state.bienToken && signalStatus === "ok" ? (
+              <p className="mb-4 rounded-[12px] border border-brand/20 bg-brand-light px-3.5 py-2.5 text-sm text-neutral">
+                Votre indication de visite a bien été transmise à l’agence
+                (sans détail financier).
+              </p>
+            ) : null}
+            {state.bienToken && signalStatus === "error" ? (
+              <p className="mb-4 rounded-[12px] border border-[#f0c4c4] bg-[#fbebeb] px-3.5 py-2.5 text-sm text-status-red">
+                Résultat calculé, mais le signal n’a pas pu être transmis à
+                l’agence. Vous pouvez réessayer plus tard.
+              </p>
+            ) : null}
+            <EcranResultat
+              state={state}
+              simulationInput={simulationInput}
+              result={result}
+              onRestart={restart}
+            />
+          </>
         ) : (
           <>
             {etape === 1 ? <StepProjet state={state} patch={patch} /> : null}
@@ -218,7 +294,6 @@ export default function FaisabiliteClient() {
               </p>
             ) : null}
 
-            {/* Nav sticky mobile */}
             <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[#e6dcc8] bg-[#f5efe3]/95 px-4 py-3 backdrop-blur-sm sm:static sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
               <div className="mx-auto flex max-w-lg gap-3">
                 {etape > 1 ? (
@@ -231,15 +306,15 @@ export default function FaisabiliteClient() {
                   </button>
                 ) : (
                   <Link
-                    href="/"
+                    href={backHref}
                     className="inline-flex min-h-11 flex-1 items-center justify-center rounded-[12px] border border-[#e6dcc8] bg-white px-4 text-base font-medium text-neutral transition-colors hover:bg-brand-light"
                   >
-                    Accueil
+                    {state.bienToken ? "Bien" : "Accueil"}
                   </Link>
                 )}
                 <button
                   type="button"
-                  onClick={goNext}
+                  onClick={() => void goNext()}
                   className="inline-flex min-h-11 flex-[1.4] items-center justify-center rounded-[12px] bg-brand px-4 text-base font-medium text-white transition-colors hover:bg-[#266b5c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                 >
                   {etape === TOTAL_ETAPES ? "Voir mon résultat" : "Continuer"}
@@ -249,9 +324,7 @@ export default function FaisabiliteClient() {
           </>
         )}
 
-        {(result || !consentsOk) && (
-          <SiteFooter className="mt-8" />
-        )}
+        {(result || !consentsOk) && <SiteFooter className="mt-8" />}
       </div>
     </div>
   );

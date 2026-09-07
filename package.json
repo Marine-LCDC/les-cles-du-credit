@@ -13,6 +13,8 @@
     "test": "npx --yes tsx --test src/lib/credit-math.test.ts src/lib/moteur/moteur.test.ts src/lib/moteur/profils-types.test.ts src/app/faisabilite/maturite-3-2.test.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.6",
+    "@supabase/supabase-js": "^2.115.0",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"
