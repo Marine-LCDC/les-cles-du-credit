@@ -1,7 +1,7 @@
 # Parcours client — Les Clés du Crédit
 
 ## Points ajustés par rapport à la description initiale
-1. **Abonnement mensuel**, pas annuel (17 €/mois les 6 premiers mois, puis 27 €/mois) — à confirmer si une option annuelle doit être ajoutée en plus.
+1. **Abonnement mensuel**, pas annuel (**29 €/mois** en intro 3–6 mois, puis **49 €/mois** en régime) — à confirmer si une option annuelle doit être ajoutée en plus ; paliers Solo / Agence / Réseau en V2 (cf. grille tarifaire).
 2. **Champ "ancien/neuf" réintégré** dans la fiche bien — indispensable au calcul des frais de notaire, à ne pas retirer.
 3. **Un seul lien par bien**, réutilisable et partageable à plusieurs visiteurs — pas un lien régénéré à chaque nouveau client.
 4. **Ajout** : un email de bienvenue avec lien de connexion, envoyé à l'agent juste après la création de son compte.
@@ -14,7 +14,7 @@
 ## Parcours rédigé
 
 ### 1. Souscription de l'agence
-L'agent arrive sur la page de vente du site Les Clés du Crédit et souscrit à l'abonnement mensuel (17 €/mois les 6 premiers mois, puis 27 €/mois).
+L'agent arrive sur la page de vente du site Les Clés du Crédit et souscrit à l'abonnement mensuel (29 €/mois en intro, puis 49 €/mois — ou essai gratuit court puis 49 €/mois).
 
 ### 2. Activation du compte
 Stripe enregistre le paiement et déclenche un webhook vers Supabase. Si l'agent est nouveau, son compte et ses accès sont créés automatiquement ; s'il existe déjà (renouvellement, changement de moyen de paiement), son statut est simplement mis à jour. Un email de bienvenue contenant un lien de connexion (magic link) lui est envoyé via Brevo.

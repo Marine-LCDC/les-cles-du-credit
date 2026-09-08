@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { hasAgentAccess } from "@/lib/stripe/access";
 import { createClient } from "@/lib/supabase/server";
 import { listBiensRecents, listSignauxVisite } from "./actions";
 import { EspaceAgentClient } from "./espace-agent-client";
@@ -27,9 +28,15 @@ export default async function EspaceAgentPage() {
 
   const { data: agent } = await supabase
     .from("agents")
-    .select("email, duree_max_locative_marche, simulations_quota_mensuel")
+    .select(
+      "email, duree_max_locative_marche, simulations_quota_mensuel, subscription_status",
+    )
     .eq("id", data.claims.sub)
     .maybeSingle();
+
+  if (!hasAgentAccess(agent?.subscription_status)) {
+    redirect("/abonnement?acces=1");
+  }
 
   const { data: compteurRaw } = await supabase.rpc("compteur_simulations_mois");
   const compteur = parseCompteur(compteurRaw);

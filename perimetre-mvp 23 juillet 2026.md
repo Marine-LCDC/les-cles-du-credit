@@ -15,7 +15,8 @@ L'unité de facturation retenue n'est ni le nombre de mandataires, ni le nombre 
 - **Pas de facturation à l'usage automatisée (pas de metered billing Stripe)** pour le MVP : en cas de dépassement, un message s'affiche invitant l'agence à contacter le support, traité manuellement le temps d'observer les niveaux de consommation réels sur les premières semaines
 - Le compteur et son affichage (ex. "32/50 simulations ce mois-ci") peuvent apparaître dans le dashboard agent, sans logique de blocage complexe à construire dans l'immédiat
 
-→ **Reporté en V2** : paliers tarifaires (Solo / Agence / Réseau) basés sur les seuils réels observés, facturation à l'usage automatisée au-delà d'un palier.
+→ **Tarif MVP** : plan unique agent — **29 €/mois** en intro (3–6 mois), puis **49 €/mois** (prix juste solo ; fourchette 39–59 €). Alternative : essai gratuit court puis 49 €.
+→ **Reporté en V2** : paliers Solo (~49 €) / Agence (~99–149 €) / Réseau (devis), différenciés par **sièges + quotas + fonctionnalités** (pas par auto-déclaration), facturation à l'usage automatisée éventuelle au-delà d'un palier. Détail : `grille-tarifaire` et `versions-suivantes.md` §4.
 
 ---
 

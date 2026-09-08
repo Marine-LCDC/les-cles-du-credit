@@ -74,7 +74,7 @@
 | **Nom de domaine** | Phase 0 : réserver · Phase 3.8 : connecter | 0,25 + 1 | Nom choisi · accès DNS |
 | **Vercel** | Phase 0 | 0,5 | Compte lié à GitHub |
 | **Supabase** | Phase 3.1 | 1 | URL projet + clés `anon` et `service_role` |
-| **Stripe** | Phase 3.5 (test) · 3.8 (live) | 1 + 0,5 | Clés test/live + Price ID 17 €/mois |
+| **Stripe** | Phase 3.5 (test) · 3.8 (live) | 1 + 0,5 | Clés test/live + Price ID intro 29 €/mois puis régime 49 €/mois |
 | **Brevo** | Phase 3.6 · 3.8 (SPF/DKIM) | 1 + 0,5 | Clé API + expéditeur vérifié |
 
 ---
@@ -144,7 +144,7 @@ Architecture : [`plan-action-15-jours-lancement.md`](plan-action-15-jours-lancem
 | **3.2 Fiche bien + lien réutilisable** | 4 | 1 | 5 | — |
 | **3.3 Formulaire visiteur 5 étapes** | 5 | 1 | 6 | — |
 | **3.4 Dashboard agent + compteur** | 4 | 1 | 5 | — |
-| **3.5 Stripe Checkout + webhook** | 4 | 2 | 6 | Stripe test |
+| **3.5 Stripe Checkout + webhook** | 4 | 2 | 6 | Stripe test · code prêt, clés à brancher |
 | **3.6 Brevo email bienvenue** | 2 | 1,5 | 3,5 | Brevo |
 | **3.7 Page vente + mentions légales** | 4 | 2 | 6 | — |
 | **3.8 Domaine + SPF/DKIM + Stripe live** | 1 | 3 | 4 | Domaine |

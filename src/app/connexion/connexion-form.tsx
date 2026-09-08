@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -26,13 +25,22 @@ export function ConnexionForm() {
       email: email.trim(),
       options: {
         emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
-        shouldCreateUser: true,
+        // Compte créé uniquement après paiement Stripe (webhook)
+        shouldCreateUser: false,
       },
     });
 
     if (error) {
       setStatus("error");
-      setMessage("Impossible d’envoyer le lien. Réessayez dans un instant.");
+      const unknownUser =
+        /signups not allowed|user not found|unable to find/i.test(
+          error.message,
+        );
+      setMessage(
+        unknownUser
+          ? "Aucun compte pour cet e-mail. Souscrivez d’abord à l’abonnement agent."
+          : "Impossible d’envoyer le lien. Réessayez dans un instant.",
+      );
       return;
     }
 

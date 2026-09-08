@@ -104,7 +104,7 @@ export default function ConfidentialitePage() {
             <h2 className="mb-3 text-base font-semibold">Destinataires</h2>
             <p>
               Agence immobilière à l&apos;origine de la demande ; hébergeur et
-              prestataires techniques (à venir : Supabase, Stripe, Brevo,
+              prestataires techniques (Supabase, Stripe, Brevo,
               Vercel) — listés précisément avant mise en production.
             </p>
           </section>

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ConnexionForm } from "./connexion-form";
+import { Suspense } from "react";
+import { AbonnementForm } from "./abonnement-form";
 
 export const metadata: Metadata = {
-  title: "Connexion agent",
-  description: "Accédez à votre espace agent via un lien magique par e-mail.",
+  title: "Abonnement agent",
+  description:
+    "Souscrivez à Les Clés du Crédit : indication de visite pour vos acquéreurs, 29 €/mois en introduction puis 49 €/mois.",
 };
 
-export default function ConnexionPage() {
+export default function AbonnementPage() {
   return (
     <main className="relative min-h-full overflow-hidden bg-[linear-gradient(165deg,#f5efe3_0%,#e1f0ec_45%,#ffffff_100%)]">
       <div
@@ -35,25 +37,27 @@ export default function ConnexionPage() {
               Les Clés du Crédit
             </p>
             <h1 className="mt-2 font-heading text-xl font-semibold text-[var(--neutral-dark)]">
-              Connexion agent
+              Abonnement agent
             </h1>
             <p className="mt-2 text-sm text-[var(--neutral-muted)]">
-              Pas de mot de passe : recevez un lien magique sur votre e-mail.
+              Indiquez si une visite vaut le coup — avant le rendez-vous.
             </p>
           </div>
         </div>
 
-        <div className="rounded-[var(--radius-lg)] border border-black/5 bg-white/80 p-6 shadow-[0_12px_40px_rgba(51,50,46,0.06)] backdrop-blur">
-          <ConnexionForm />
+        <div className="rounded-[16px] border border-black/5 bg-white/80 p-6 shadow-[0_12px_40px_rgba(51,50,46,0.06)] backdrop-blur">
+          <Suspense fallback={<p className="text-sm text-[var(--neutral-muted)]">Chargement…</p>}>
+            <AbonnementForm />
+          </Suspense>
         </div>
 
         <p className="text-center text-sm text-[var(--neutral-muted)]">
-          Pas encore abonné ?{" "}
+          Déjà abonné ?{" "}
           <Link
-            href="/abonnement"
+            href="/connexion"
             className="font-medium text-[var(--brand-main)] underline-offset-2 hover:underline"
           >
-            Voir l’abonnement
+            Se connecter
           </Link>
         </p>
       </div>

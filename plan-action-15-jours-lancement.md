@@ -38,7 +38,7 @@
 - [x] Périmètre MVP figé (voir `perimetre-mvp.md`) : formulaire 5 étapes, moteur de verdict, rôles, quota
 - [x] Mentions légales et disclaimers rédigés (voir `mentions-legales-version-finale.md`)
 - [x] Charte graphique et guide de copywriting rédigés
-- [x] Grille tarifaire figée : 17€/mois (6 mois) puis 27€/mois, quota de simulations inclus
+- [x] Grille tarifaire figée : 29 €/mois (intro) puis 49 €/mois (régime / prix juste solo) ; paliers agence 99–149 € en V2 ; quota de simulations inclus
 - [ ] Envoyer la demande de consultation express à un avocat (validation des libellés de visite, de la liaison acquéreur/bien, du statut IOBSP) — en parallèle du dev, non bloquant
 - [ ] Constituer la liste de 100-150 agences immobilières pour la prospection LinkedIn (à démarrer dès aujourd'hui, en parallèle du dev)
 
@@ -159,5 +159,5 @@
 - Gestion complète de portefeuille de biens côté agent (recherche, édition, archivage)
 - Rôle "agence" multi-mandataires en self-service
 - Calcul fin différencié par catégorie professionnelle au-delà des taux déjà intégrés
-- Paliers tarifaires basés sur l'usage réel observé, facturation à l'usage automatisée
+- Paliers tarifaires Solo (~49 €) / Agence (~99–149 €) / Réseau (devis) basés sur sièges + quotas + features — pas sur une case à cocher « statut » ; facturation à l'usage automatisée éventuelle
 - Tunnel B2C complet et Instagram

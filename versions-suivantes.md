@@ -80,11 +80,39 @@ Référence prix : [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023
 
 ## 4. Produit agent — enrichissements V2
 
+Référence prix et packaging : [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023%20juillet%202026.md) (décision 8 sept. 2026).
+
+### 4.1 Portefeuille & multi-agents
+
 - [ ] Gestion complète de portefeuille de biens (recherche, édition, archivage)
-- [ ] Rôle « agence » multi-mandataires en self-service
-- [ ] Paliers tarifaires basés sur l’usage réel (Solo / Agence / Réseau)
-- [ ] Facturation à l’usage automatisée (metered billing) au-delà d’un palier
+- [ ] Rôle « agence » multi-mandataires en self-service (sièges, invitations, vue consolidée des signaux)
 - [ ] Option d’abonnement annuel (si confirmée)
+
+### 4.2 Paliers tarifaires Solo / Agence / Réseau (décision 8 sept. 2026)
+
+**Principe :** on ne distingue pas les clients par une case « Je suis solo / agence / réseau » à l’achat — c’est contournable. On distingue par **ce que le plan débloque** (sièges, quotas, features). Sans ça, rien n’empêche un réseau de souscrire au tarif solo.
+
+**Prix cibles (indicatif, à calibrer avec l’usage réel observé) :**
+
+| Plan | Prix juste | Sièges | Quota sim. / mois (ex.) | Différenciateurs |
+|---|---|---|---|---|
+| **Solo** | **~49 €/mois** (fourchette 39–59) | 1 | 30–50 | Dashboard perso uniquement |
+| **Agence** | **~99–149 €/mois** | 2–5 | 150–300 | Vue équipe, biens / signaux partagés |
+| **Réseau** | Sur devis / paliers élevés | Packs / illimité | Élevé ou metered | Multi-agences, admin, facturation centrale, support dédié |
+
+**MVP actuel (rappel) :** un seul plan commercial — intro **29 €** → régime **49 €** (ou essai gratuit court puis 49 €). Pas de paliers à l’achat tant que multi-sièges n’existe pas. Une agence qui veut plusieurs agents = plusieurs abonnements individuels (ou rattachement manuel Stripe).
+
+**Ce qui empêche le spoofing du tarif solo (à construire en V2) :**
+
+- [ ] Limite dure **1 siège** sur le plan Solo (pas de partage de compte autorisé — CGV + UX)
+- [ ] Quotas différenciés par plan + **blocage / upgrade** au dépassement (plus seulement « contactez-nous »)
+- [ ] Features Agence / Réseau absentes du Solo (vue consolidée, invitations, admin) — principal verrou produit
+- [ ] CGV : interdiction de partage de compte ; droit de requalifier / résilier
+- [ ] Signaux d’abus (volume biens / simulations, emails d’équipe) → nudge d’upgrade
+- [ ] Facturation à l’usage automatisée (metered billing Stripe) au-delà d’un palier, une fois les seuils réels connus
+- [ ] Page pricing / checkout multi-plans (Solo vs Agence vs contact Réseau)
+
+**Ordre recommandé :** observer 4–8 semaines d’usage MVP → figer les seuils de quota → ship multi-sièges + plans → activer metered billing si besoin.
 
 ---
 
@@ -108,5 +136,6 @@ Référence prix : [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023
 
 | Date | Décision | Où c’est visible aujourd’hui |
 |------|----------|------------------------------|
+| 8 sept. 2026 | Abonnement agent : abandon 17→27 € ; **lancement 29 € intro → 49 € régime** (alt. essai gratuit puis 49 €) ; prix juste solo ~49 € (39–59) ; agence multi-usage ~99–149 € en V2 ; packaging par sièges/quotas/features, pas par auto-déclaration | [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023%20juillet%202026.md), §4.2 ci-dessous, UI `/abonnement` |
 | 7 sept. 2026 | Retrait CTA simulateur + opt-in sur `/faisabilite` ; teaser guide des chiffres selon verdict ; capture email + lead magnet plus tard | `src/app/faisabilite/components/EcranResultat.tsx` |
 | 7 sept. 2026 | Phase 2 terrain clôturée — **GO Phase 3** (retours positifs sur l’app) | [`roadmap-projet.md`](roadmap-projet.md) |

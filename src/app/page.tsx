@@ -62,10 +62,17 @@ export default function Home() {
         <p className="mt-6 text-sm text-neutral-muted">
           Agent immobilier ?{" "}
           <Link
+            href="/abonnement"
+            className="font-medium text-brand underline-offset-2 hover:underline"
+          >
+            Découvrir l’abonnement
+          </Link>
+          {" · "}
+          <Link
             href="/connexion"
             className="font-medium text-brand underline-offset-2 hover:underline"
           >
-            Accéder à l’espace agent
+            Se connecter
           </Link>
         </p>
       </main>
