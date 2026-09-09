@@ -18,6 +18,12 @@ export function getStripePriceId(): string {
   return priceId;
 }
 
+/** Coupon intro optionnel (−20 € × 3 mois). Absent = pas de remise auto. */
+export function getStripeCouponId(): string | null {
+  const couponId = process.env.STRIPE_COUPON_ID?.trim();
+  return couponId || null;
+}
+
 export function getStripeWebhookSecret(): string {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {

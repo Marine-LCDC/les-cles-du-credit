@@ -74,7 +74,7 @@
 | **Nom de domaine** | Phase 0 : réserver · Phase 3.8 : connecter | 0,25 + 1 | Nom choisi · accès DNS |
 | **Vercel** | Phase 0 | 0,5 | Compte lié à GitHub |
 | **Supabase** | Phase 3.1 | 1 | URL projet + clés `anon` et `service_role` |
-| **Stripe** | Phase 3.5 (test) · 3.8 (live) | 1 + 0,5 | Clés test/live + Price ID intro 29 €/mois puis régime 49 €/mois |
+| **Stripe** | Phase 3.5 (test) · 3.8 (live) | 1 + 0,5 | Clés test/live + Price ID ; **figé 9 sept.** : 27 € × 3 mois → 47 €, option C phases Dashboard, quota 40 |
 | **Brevo** | Phase 3.6 · 3.8 (SPF/DKIM) | 1 + 0,5 | Clé API + expéditeur vérifié |
 
 ---
@@ -145,8 +145,8 @@ Architecture : [`plan-action-15-jours-lancement.md`](plan-action-15-jours-lancem
 | **3.3 Formulaire visiteur 5 étapes** | 5 | 1 | 6 | — |
 | **3.4 Dashboard agent + compteur** | 4 | 1 | 5 | — |
 | **3.5 Stripe Checkout + webhook** | 4 | 2 | 6 | Stripe test · code prêt, clés à brancher |
-| **3.6 Brevo email bienvenue** | 2 | 1,5 | 3,5 | Brevo |
-| **3.7 Page vente + mentions légales** | 4 | 2 | 6 | — |
+| **3.6 Brevo email bienvenue** | 2 | 1,5 | 3,5 | ✅ Brevo OK (expéditeur + API + mail bienvenue / magic link testés) |
+| **3.7 Page vente + mentions légales** | 4 | 2 | 6 | ✅ Landing `/` · vente `/abonnement` · `/mentions-legales` · `/confidentialite` · `/cgu` |
 | **3.8 Domaine + SPF/DKIM + Stripe live** | 1 | 3 | 4 | Domaine |
 | **3.9 QA bout en bout** | 3 | 2 | 5 | — |
 
@@ -170,6 +170,6 @@ Architecture : [`plan-action-15-jours-lancement.md`](plan-action-15-jours-lancem
 
 | Quand | Tâche | Durée | Compte |
 |-------|-------|------:|--------|
-| **Maintenant** | **3.1** Créer Supabase + schema + RLS + auth magic link | 6,5 h | Supabase |
-| Ensuite | 3.2 Fiche bien agent + lien réutilisable | 5 h | — |
-| Puis | 3.3 → 3.9 (dashboard, Stripe, Brevo, page vente, QA) | ~35 h | Stripe, Brevo, domaine |
+| **Maintenant** | **3.8** Domaine + SPF/DKIM Brevo + Stripe live | 4 h | Domaine |
+| Ensuite | **3.9** QA bout en bout | 5 h | — |
+| Puis | Premières ventes / prospection | — | — |

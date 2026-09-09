@@ -5,7 +5,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 export default function Home() {
   return (
     <div className="relative flex min-h-full flex-col overflow-hidden">
-      {/* Atmosphere — dégradé sable → teal discret */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,#e1f0ec_0%,transparent_55%),radial-gradient(ellipse_at_90%_10%,rgba(199,169,122,0.35)_0%,transparent_45%),linear-gradient(180deg,#f5efe3_0%,#ebe3d4_100%)]"
@@ -20,60 +19,47 @@ export default function Home() {
       />
 
       <main className="relative z-10 mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:py-24">
-        <div className="mb-8 flex h-32 w-32 items-center justify-center overflow-hidden rounded-[16px] bg-neutral shadow-sm sm:h-40 sm:w-40">
+        <div className="animate-fade-up mb-8 flex h-36 w-36 items-center justify-center overflow-hidden rounded-[16px] bg-neutral shadow-sm sm:h-44 sm:w-44">
           <Image
             src="/brand/logo.png"
             alt="Les Clés du Crédit"
-            width={160}
-            height={160}
+            width={176}
+            height={176}
             priority
             className="h-full w-full object-cover"
           />
         </div>
 
-        <p className="mb-3 font-heading text-sm font-medium tracking-wide text-brand">
+        <p className="animate-fade-up font-heading text-base font-semibold tracking-wide text-brand sm:text-lg [animation-delay:80ms]">
           Les Clés du Crédit
         </p>
 
-        <h1 className="max-w-xl text-3xl font-semibold leading-tight text-neutral sm:text-4xl">
-          Voyons ensemble si ce projet tient la route
+        <h1 className="animate-fade-up mt-3 max-w-xl font-heading text-3xl font-semibold leading-tight text-neutral sm:text-4xl [animation-delay:140ms]">
+          Sachez si une visite vaut le coup — avant le rendez-vous
         </h1>
 
-        <p className="mt-4 max-w-md text-base text-neutral-muted sm:text-lg">
-          Une estimation claire avant la visite — pour l’acquéreur comme pour
-          l’agent.
+        <p className="animate-fade-up mt-4 max-w-md text-base text-neutral-muted sm:text-lg [animation-delay:200ms]">
+          Vos acquéreurs simulent le bien. Vous recevez le même signal de
+          visite, sans accéder à leurs finances.
         </p>
 
-        <div className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
-          <Link
-            href="/faisabilite"
-            className="inline-flex min-h-11 items-center justify-center rounded-[12px] bg-brand px-6 text-base font-medium text-white transition-colors hover:bg-[#266b5c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-          >
-            Estimer mon projet
-          </Link>
-          <Link
-            href="/simulateur"
-            className="inline-flex min-h-11 items-center justify-center rounded-[12px] border border-sable/60 bg-white/60 px-6 text-base font-medium text-neutral backdrop-blur-sm transition-colors hover:bg-white"
-          >
-            Simulateur de crédit
-          </Link>
-        </div>
-
-        <p className="mt-6 text-sm text-neutral-muted">
-          Agent immobilier ?{" "}
+        <div className="animate-fade-up mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center [animation-delay:260ms]">
           <Link
             href="/abonnement"
-            className="font-medium text-brand underline-offset-2 hover:underline"
+            className="inline-flex min-h-11 items-center justify-center rounded-[12px] bg-brand px-6 text-base font-medium text-white transition-colors hover:bg-[#266b5c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             Découvrir l’abonnement
           </Link>
-          {" · "}
           <Link
             href="/connexion"
-            className="font-medium text-brand underline-offset-2 hover:underline"
+            className="inline-flex min-h-11 items-center justify-center rounded-[12px] border border-sable/60 bg-white/60 px-6 text-base font-medium text-neutral backdrop-blur-sm transition-colors hover:bg-white"
           >
             Se connecter
           </Link>
+        </div>
+
+        <p className="animate-fade-up mt-6 text-sm text-neutral-muted [animation-delay:320ms]">
+          27 €/mois pendant 3 mois · puis 47 €/mois
         </p>
       </main>
 

@@ -4,7 +4,7 @@
  * À faire valider par un avocat.
  */
 
-export const EMAIL_CONTACT_DPO = "contact@lesclesducredit.fr";
+export const EMAIL_CONTACT_DPO = "info@lesclesducredit.fr";
 
 export const DUREE_CONSERVATION_TRIPTYQUE =
   "la durée de la mission de vente + 6 mois";

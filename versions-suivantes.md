@@ -100,7 +100,7 @@ Référence prix et packaging : [`grille-tarifaire 23 juillet 2026.md`](grille-t
 | **Agence** | **~99–149 €/mois** | 2–5 | 150–300 | Vue équipe, biens / signaux partagés |
 | **Réseau** | Sur devis / paliers élevés | Packs / illimité | Élevé ou metered | Multi-agences, admin, facturation centrale, support dédié |
 
-**MVP actuel (rappel) :** un seul plan commercial — intro **29 €** → régime **49 €** (ou essai gratuit court puis 49 €). Pas de paliers à l’achat tant que multi-sièges n’existe pas. Une agence qui veut plusieurs agents = plusieurs abonnements individuels (ou rattachement manuel Stripe).
+**MVP actuel (rappel) :** un seul plan commercial — intro **27 €** (3 mois) → régime **47 €** (phases Stripe Dashboard). Pas de paliers à l’achat tant que multi-sièges n’existe pas. Une agence qui veut plusieurs agents = plusieurs abonnements individuels (ou rattachement manuel Stripe). Quota MVP : **40** simulations / mois.
 
 **Ce qui empêche le spoofing du tarif solo (à construire en V2) :**
 
@@ -136,6 +136,8 @@ Référence prix et packaging : [`grille-tarifaire 23 juillet 2026.md`](grille-t
 
 | Date | Décision | Où c’est visible aujourd’hui |
 |------|----------|------------------------------|
-| 8 sept. 2026 | Abonnement agent : abandon 17→27 € ; **lancement 29 € intro → 49 € régime** (alt. essai gratuit puis 49 €) ; prix juste solo ~49 € (39–59) ; agence multi-usage ~99–149 € en V2 ; packaging par sièges/quotas/features, pas par auto-déclaration | [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023%20juillet%202026.md), §4.2 ci-dessous, UI `/abonnement` |
+| 9 sept. 2026 | **Stripe live figé** — intro **27 €** × **3 mois** → régime **47 €** ; mécanique **C phases Dashboard** ; quota **40**/mois | [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023%20juillet%202026.md), UI `/abonnement` + CGU, migration quota DB |
+| 8 sept. 2026 | Avant Stripe live (3.8), options à trancher (49 vs 47, A/B/C, quota 40) — **tranché le 9 sept.** | Voir ligne du 9 sept. |
+| 8 sept. 2026 | Abonnement agent : abandon 17→27 € ; hypothèse temporaire 29→49 remplacée le 9 sept. par **27→47** ; prix juste solo ~47–49 € (39–59) ; agence multi-usage ~99–149 € en V2 | [`grille-tarifaire 23 juillet 2026.md`](grille-tarifaire%2023%20juillet%202026.md), §4.2 ci-dessous, UI `/abonnement` |
 | 7 sept. 2026 | Retrait CTA simulateur + opt-in sur `/faisabilite` ; teaser guide des chiffres selon verdict ; capture email + lead magnet plus tard | `src/app/faisabilite/components/EcranResultat.tsx` |
 | 7 sept. 2026 | Phase 2 terrain clôturée — **GO Phase 3** (retours positifs sur l’app) | [`roadmap-projet.md`](roadmap-projet.md) |

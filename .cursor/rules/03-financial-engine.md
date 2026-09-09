@@ -6,8 +6,8 @@
 
 ## 1. Unité de Comptage & Quotas Abonnement
 - **Unité de mesure** : L'unité de facturation est le **nombre de simulations visiteur réellement complétées dans le mois** (et non le nombre de fiches biens ni de mandataires)[cite: 4, 5].
-- **Quota MVP** : Quota mensuel fixe de **50 simulations complétées par mois et par agence**[cite: 4, 5].
-- **Dépassement de quota (MVP)** : Pas de blocage automatisé complexe ni de facturation Stripe à l'usage[cite: 4, 5]. En cas de dépassement des 50 simulations, afficher un message d'avertissement invitant l'agence à contacter le support[cite: 4, 5].
+- **Quota MVP** : Quota mensuel fixe de **40 simulations complétées par mois et par agence**.
+- **Dépassement de quota (MVP)** : Pas de blocage automatisé complexe ni de facturation Stripe à l'usage. En cas de dépassement des 40 simulations, afficher un message d'avertissement invitant l'agence à contacter le support.
 
 ---
 

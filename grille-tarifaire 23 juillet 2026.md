@@ -1,13 +1,13 @@
 # Grille tarifaire — Les Clés du Crédit
 
-> Décision tarifaire agent mise à jour le **8 sept. 2026** (échange produit : prix juste vs prix de lancement, packaging Solo / Agence / Réseau).
+> Décision tarifaire agent mise à jour le **9 sept. 2026** (Stripe live 3.8 : 27 € → 47 €, phases Dashboard, quota 40).
 
 ## Vue d'ensemble
 
 | Produit | Cible | Prix | Type | Statut MVP |
 |---|---|---|---|---|
-| Abonnement agent (lancement) | Agent immobilier (1 siège) | **29 €/mois** en intro (3–6 mois), puis **49 €/mois** | Récurrent (Stripe Billing), quota de simulations visiteur inclus | ✅ Inclus dans le MVP |
-| Abonnement agent (régime / prix juste solo) | Mandataire solo | **~49 €/mois** (fourchette 39–59 €) | Récurrent — ancre de valeur une fois le produit prouvé | 🎯 Cible après intro |
+| Abonnement agent (lancement) | Agent immobilier (1 siège) | **27 €/mois** pendant **3 mois**, puis **47 €/mois** | Récurrent (Stripe Billing, phases produit), quota **40** simulations / mois | ✅ Inclus dans le MVP |
+| Abonnement agent (régime / prix juste solo) | Mandataire solo | **47 €/mois** (ancre « sous 50 » ; fourchette valeur 39–59 €) | Récurrent — après l’intro | 🎯 En vigueur après mois 3 |
 | Abonnement agence (multi-usage) | Petite agence / multi-agents | **~99–149 €/mois** | Récurrent — dès que multi-sièges + quota élargi existent | ⏸ V2 |
 | Abonnement réseau | Enseigne / réseau | Sur devis / paliers élevés | Multi-agences, quotas élevés, support | ⏸ V2 |
 | Simulateur de crédit inversé | Acquéreur | Gratuit | Lead magnet — collecte email + consentement | ⏸ Phase bonus (si le temps le permet) |
@@ -25,22 +25,40 @@ Objectif : maximiser les **premières 10–20 souscriptions** et l’usage réel
 
 | Phase | Tarif | Durée / modalité |
 |---|---|---|
-| **Intro** | **29 €/mois** | 3 à 6 premiers mois (à figer côté Stripe : prix promo puis prix standard, ou essai gratuit court) |
-| **Régime** | **49 €/mois** | Après l’intro — prix affiché clairement dès le checkout |
+| **Intro** | **27 €/mois** | **3 premiers mois** (Stripe : phases produit Dashboard — option C) |
+| **Régime** | **47 €/mois** | À partir du 4ᵉ mois — affiché clairement dès `/abonnement` et Checkout |
 
-**Alternative acceptable** : essai gratuit court (ex. 14–30 jours, ou N simulations offertes), puis **49 €/mois** sans phase à 29 € — pertinent si la vente se fait surtout en démo 1:1.
+### Décisions figées pour Stripe live (phase 3.8) — 9 sept. 2026
 
-L’ancien schéma 17 € → 27 € est **abandonné** : trop bas pour ancrer la valeur, et le passage ultérieur à 49 € serait plus difficile psychologiquement.
+| Décision | Choix |
+|---|---|
+| Prix intro | **27 € / mois** |
+| Prix régime | **47 € / mois** |
+| Durée intro | **3 mois** |
+| Mécanique | **C — phases produit Dashboard** (1 `STRIPE_PRICE_ID` = offre / phase de départ) |
+| Quota | **40** simulations visiteurs vérifiables / mois |
+
+**Config Stripe (option C) — à faire en mode test d’abord, puis live :**
+
+1. Dashboard Stripe → **Products** → créer (ou éditer) le produit « Abonnement agent — Les Clés du Crédit ».
+2. Ajouter une offre / prix avec **phases** (ou « pricing phases » / subscription schedule embarqué selon l’UI) :
+   - Phase 1 : **27,00 €** TTC (ou HT selon votre régime fiscal), récurrence **mensuelle**, **3 itérations** ;
+   - Phase 2 : **47,00 €**, mensuel, **indéfinie**.
+3. Copier le `price_…` de la **phase de départ** (ou de l’offre) dans `STRIPE_PRICE_ID` (Vercel Production + `.env.local` si tests locaux).
+4. Checkout test : souscrire avec une carte test → dans l’abonnement créé, vérifier qu’il y a bien **2 phases** (27 € × 3 puis 47 €).
+5. Répéter en **mode live** avec les clés `pk_live_` / `sk_live_` et un endpoint webhook live pointant vers `https://www.lesclesducredit.fr/api/stripe/webhook`.
+
+L’app Checkout reste en `mode: "subscription"` + un seul `line_items` price — Stripe applique les phases côté produit.
 
 ### Prix juste (produit mature, valeur prouvée)
 
 | Profil | Prix juste mensuel | Commentaire |
 |---|---|---|
-| **Solo** (1 siège) | **~49 €/mois** (fourchette **39–59 €**) | Outil métier dédié ; ROI dès quelques visites inutiles évitées |
+| **Solo** (1 siège) | **~47–49 €/mois** (fourchette **39–59 €**) | Outil métier dédié ; ROI dès quelques visites inutiles évitées |
 | **Petite agence** (multi-usage / multi-agents) | **~99–149 €/mois** | Plusieurs sièges + quota élargi + (à terme) vue équipe |
 | **Réseau** | Au-delà, paliers / devis | Quotas élevés, admin, facturation centrale |
 
-À ~49 €, le tarif solo reste cohérent avec la valeur (filtre opérationnel visite + moteur sérieux). Au-delà de ~79 € pour un solo **sans** multi-agents ni reporting agence, la friction de vente devient forte pour un produit encore jeune.
+À ~47 €, le tarif solo reste cohérent avec la valeur (filtre opérationnel visite + moteur sérieux). Au-delà de ~79 € pour un solo **sans** multi-agents ni reporting agence, la friction de vente devient forte pour un produit encore jeune.
 
 ---
 
@@ -50,8 +68,8 @@ Après réflexion, ni le nombre de mandataires ni le nombre de fiches biens cré
 
 ### MVP (maintenant)
 
-- **Un seul plan commercial** : abonnement agent individuel (1 siège), intro **29 €** → régime **49 €**.
-- Quota mensuel généreux et fixe (ex. 50 simulations/mois), identique pour tous.
+- **Un seul plan commercial** : abonnement agent individuel (1 siège), intro **27 €** (3 mois) → régime **47 €**.
+- Quota mensuel fixe : **40 simulations/mois**, identique pour tous.
 - Pas de facturation à l'usage automatisée (pas de metered billing Stripe) — en cas de dépassement, message « contactez-nous », traitement manuel.
 - Pas de distinction Solo / Agence / Réseau à l’achat : chaque agent souscrit individuellement. Une agence qui veut plusieurs comptes = plusieurs abonnements (ou rattachement manuel Stripe).
 
@@ -111,4 +129,4 @@ Upsell supplémentaire, reprend les éléments du guide en format vidéo/plus in
 
 ## Rappel MVP
 
-Seul l'**abonnement agent (29 € intro → 49 € régime)** est à construire et à commercialiser dans le sprint actuel. Un seul plan, un siège, quota fixe. L'ensemble du tunnel acquéreur (simulateur gratuit, 5 €, 17 €, 47 €) et les paliers Solo / Agence / Réseau restent en phase bonus / V2 — à activer uniquement si le temps le permet (B2C) ou une fois l’usage réel observé (paliers), et seulement une fois la conformité e-commerce en place pour le B2C.
+Seul l'**abonnement agent (27 € × 3 mois → 47 € régime, quota 40)** est à construire et à commercialiser dans le sprint actuel. Un seul plan, un siège, quota fixe. L'ensemble du tunnel acquéreur (simulateur gratuit, 5 €, 17 €, 47 €) et les paliers Solo / Agence / Réseau restent en phase bonus / V2 — à activer uniquement si le temps le permet (B2C) ou une fois l’usage réel observé (paliers), et seulement une fois la conformité e-commerce en place pour le B2C.

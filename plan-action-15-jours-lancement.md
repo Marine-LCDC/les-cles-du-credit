@@ -92,9 +92,9 @@
 ## PHASE 3 — Site vitrine et tunnel de vente (J8-J10, en parallèle de la fin du dev)
 
 ### J9 — Pages marketing + Stripe
-- [ ] Landing page agent (proposition de valeur, preuve sociale si pilote disponible, CTA clair)
-- [ ] Page de commande abonnement avec Stripe Checkout intégré (ou "réserver une démo de 15 min" pour sécuriser la conversion sur les 10 premières ventes)
-- [ ] Pages légales (mentions légales, politique de confidentialité, CGU agent)
+- [x] Landing page agent (proposition de valeur, preuve sociale si pilote disponible, CTA clair)
+- [x] Page de commande abonnement avec Stripe Checkout intégré (ou "réserver une démo de 15 min" pour sécuriser la conversion sur les 10 premières ventes)
+- [x] Pages légales (mentions légales, politique de confidentialité, CGU agent)
 
 ### J10 — Emails Brevo + copywriting
 - [ ] Configurer Brevo : emails transactionnels (bienvenue agent, magic link) et templates marketing

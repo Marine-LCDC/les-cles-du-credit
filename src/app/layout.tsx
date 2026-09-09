@@ -21,11 +21,7 @@ export const metadata: Metadata = {
     template: "%s · Les Clés du Crédit",
   },
   description:
-    "Estimez la faisabilité d’un projet immobilier avant la visite — un outil clair pour agents et acquéreurs.",
-  icons: {
-    icon: "/brand/logo.png",
-    apple: "/brand/logo.png",
-  },
+    "Indiquez si une visite vaut le coup avant le rendez-vous — outil pour agents immobiliers.",
 };
 
 export default function RootLayout({

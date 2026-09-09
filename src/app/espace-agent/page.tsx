@@ -41,7 +41,7 @@ export default async function EspaceAgentPage() {
   const { data: compteurRaw } = await supabase.rpc("compteur_simulations_mois");
   const compteur = parseCompteur(compteurRaw);
   const count = compteur?.count ?? 0;
-  const quota = compteur?.quota ?? agent?.simulations_quota_mensuel ?? 50;
+  const quota = compteur?.quota ?? agent?.simulations_quota_mensuel ?? 40;
   const [biens, signaux] = await Promise.all([
     listBiensRecents(),
     listSignauxVisite(),

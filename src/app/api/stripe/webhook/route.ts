@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe, getStripeWebhookSecret } from "@/lib/stripe/client";
+import { sendAgentWelcomeEmail } from "@/lib/brevo/welcome-agent";
 import {
   fieldsFromSubscription,
   syncAgentByCustomerId,
@@ -40,7 +41,19 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const fields = fieldsFromSubscription(subscription, customerId);
   const { created } = await upsertAgentFromStripe({ email, fields });
 
-  // Phase 3.6 — Brevo : email de bienvenue + magic link
+  // Magic link via Brevo (template HTML côté app). Sans clé API : log seulement
+  // pour ne pas bloquer les tests Stripe avant la config Brevo.
+  if (!process.env.BREVO_API_KEY?.trim()) {
+    console.warn(
+      `[stripe] BREVO_API_KEY manquant — bienvenue non envoyée à ${email}.`,
+    );
+  } else {
+    const { messageId } = await sendAgentWelcomeEmail({ email });
+    console.info(
+      `[stripe] Bienvenue Brevo envoyée à ${email} (messageId=${messageId}, created=${created}).`,
+    );
+  }
+
   console.info(
     `[stripe] Agent ${created ? "créé" : "mis à jour"} pour ${email} (${fields.subscription_status}).`,
   );

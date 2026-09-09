@@ -93,6 +93,22 @@ export default function MentionsLegalesPage() {
               .
             </p>
           </section>
+
+          <section className="rounded-[16px] border border-[#e6dcc8] bg-white px-5 py-5">
+            <h2 className="mb-3 text-base font-semibold">
+              Conditions agents
+            </h2>
+            <p>
+              L&apos;abonnement professionnel est régi par les{" "}
+              <Link
+                href="/cgu"
+                className="text-brand underline-offset-2 hover:underline"
+              >
+                conditions générales agents
+              </Link>
+              .
+            </p>
+          </section>
         </div>
 
         <SiteFooter className="mt-10" />

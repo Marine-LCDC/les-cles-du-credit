@@ -43,7 +43,7 @@ export function fieldsFromSubscription(
 
 /**
  * Crée l'utilisateur Auth si besoin, puis synchronise la ligne agents.
- * L'email de bienvenue Brevo est prévu en phase 3.6.
+ * L'email de bienvenue Brevo est déclenché par le webhook checkout.
  */
 export async function upsertAgentFromStripe(params: {
   email: string;
